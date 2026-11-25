@@ -1,0 +1,88 @@
+# GreenStep 전체 구조 (노션 「GreenStep_기술_아키텍처」)
+#   브라우저 → nginx(:80) → /api/ → FastAPI(:8000) → PostgreSQL 19
+#   수집 워커(2시간마다) → 1365 봉사참여정보 API → PostgreSQL   (채용 공고 수집은 노션에서 보류)
+#
+# 실행:  src 폴더에서  docker compose up -d --build   →  http://localhost:8080
+# 종료:  docker compose down          (DB 데이터 유지)
+#        docker compose down -v       (DB 데이터까지 삭제 · 되돌릴 수 없음)
+# 포트 변경: WEB_PORT=80 docker compose up -d --build   (PowerShell: $env:WEB_PORT=80; docker compose up -d --build)
+#
+# 웹 API 모드 (빌드할 때 결정):
+#   VITE_API_MODE=http (기본) → 회원가입·기관가입·공고 등록이 PostgreSQL 에 저장됨
+#                               아직 서버에 없는 기능(신청·활동 기록·이력서·CSR 보고서)은 "구현되지 않음" 안내
+#   VITE_API_MODE=mock        → 브라우저 목업(localStorage)으로 전체 기능 시연
+#   PowerShell: $env:VITE_API_MODE='mock'; docker compose up -d --build
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: web/Dockerfile
+      args:
+        VITE_API_MODE: ${VITE_API_MODE:-http}
+    image: greenstep-web
+    container_name: greenstep-web
+    ports:
+      - "${WEB_PORT:-8080}:80"
+    restart: unless-stopped
+    depends_on:
+      - backend
+
+  backend:
+    build: ./backend                # FastAPI + SQLAlchemy + Alembic
+    image: greenstep-backend
+    container_name: greenstep-backend
+    environment:
+      DATABASE_URL: postgresql+psycopg://greenstep:greenstep@db:5432/greenstep
+      JWT_SECRET: ${JWT_SECRET:-dev-only-change-me}   # 운영에서는 반드시 변경
+      DEMO_MODE: ${DEMO_MODE:-true}                     # 데모 계정 시드 + 기관 심사 승인 버튼
+      COOKIE_SECURE: ${COOKIE_SECURE:-false}            # HTTPS 면 true
+    depends_on:
+      db:
+        condition: service_healthy
+    expose:
+      - "8000"
+    restart: unless-stopped
+
+  db:
+    image: postgres:19
+    container_name: greenstep-db
+    environment:
+      POSTGRES_USER: greenstep
+      POSTGRES_PASSWORD: greenstep  # 로컬 개발용. 운영에서는 변경
+      POSTGRES_DB: greenstep
+    volumes:
+      # PostgreSQL 18+ 공식 이미지는 /var/lib/postgresql 을 마운트 (데이터는 그 아래 19/docker)
+      - pgdata:/var/lib/postgresql
+    ports:
+      # 로컬에서 DB 도구(DBeaver 등)로 테이블 확인용. 127.0.0.1 에만 열림
+      # 호스트 5432 는 PC 에 설치된 PostgreSQL 과 겹치지 않게 5433 사용
+      - "127.0.0.1:${DB_PORT:-5433}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U greenstep -d greenstep"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+  # 1365 봉사 공고 수집 워커 — src/api/greenstep_collector.py
+  # 2시간마다 공공데이터포털 API → activities(source_type='1365') 저장. 인증키는 이 컨테이너에만 있음
+  worker:
+    build: ./api
+    image: greenstep-worker
+    container_name: greenstep-worker
+    env_file:
+      - ./api/.env                  # SERVICE_KEY, REGION_LIMIT, RUN_MODE, INTERVAL_SECONDS … (.env.example 참고)
+    environment:
+      DATABASE_URL: postgresql://greenstep:greenstep@db:5432/greenstep
+    depends_on:
+      db:
+        condition: service_healthy
+      backend:
+        condition: service_started  # 스키마(Alembic)는 backend 가 만들고, 워커는 준비될 때까지 대기
+    restart: unless-stopped
+
+  # 채용 공고 수집 (고용24 1순위, 사람인 2순위, 크롤링 금지) — 노션에서 보류
+
+volumes:
+  pgdata:

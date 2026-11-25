@@ -1,0 +1,53 @@
+# ============================================================================
+# GreenStep — Git 에서 제외할 파일 (src 폴더와 그 아래 전체에 적용)
+# ============================================================================
+
+# ───── 비밀값: 인증키·비밀번호는 절대 올리지 않음 ─────
+# .env.example(자리 표시만 있는 견본)은 올려도 되므로 예외로 둠
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# ───── 데이터 백업 · DB 덤프 (회원 이메일·암호화된 비밀번호 포함) ─────
+# 주의: 테이블 정의인 backend/alembic/versions/*.sql 은 올려야 하므로 *.sql 전체는 제외하지 않음
+*backup*.sql
+*.dump
+*.sqlite
+*.sqlite3
+
+# ───── 수집 워커가 만드는 파일 (실행할 때마다 다시 생김) ─────
+api/data/
+
+# ───── 프론트엔드 (React / Vite) ─────
+node_modules/
+web/dist/
+*.tsbuildinfo
+.vite/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ───── 백엔드 (Python) ─────
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+
+# ───── 로그 · 임시 파일 ─────
+*.log
+*.tmp
+*.bak
+*.swp
+
+# ───── 편집기 · 운영체제 ─────
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
