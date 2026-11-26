@@ -10,6 +10,7 @@ import type {
   CsrReport,
   Faq,
   Notice,
+  OrgKey,
   OrgMember,
   Organization,
   Participation,
@@ -58,6 +59,11 @@ export const seedOrgs: Organization[] = [
   org({ id: 'o5', name: '부산 디지털배움터', organizationType: 'PUBLIC', businessNo: '6178310005', address: '부산 해운대구 센텀로 21', intro: '지자체가 운영하는 시민 디지털 교육 공간입니다.' }),
   org({ id: 'o6', name: '경기 함께동물보호소', organizationType: 'WELFARE_FACILITY', businessNo: '1428210006', address: '경기 용인시 처인구 보호소길 3', intro: '유기동물 보호와 입양을 돕는 민간 보호소입니다.' }),
 ];
+
+/** 기관 회원가입 시연용 기관 코드 키 (서버 backend/app/seed.py DEMO_ORG_KEYS 와 같은 값) */
+export const seedOrgKeys: OrgKey[] = ['GS-DEMO-0001', 'GS-DEMO-0002', 'GS-DEMO-0003'].map((keyCode) => ({
+  keyCode, organizationId: null, issuedAt: T0, usedAt: null,
+}));
 
 export const seedMembers: OrgMember[] = [
   { id: 'm1', userId: 'mu1', organizationId: 'o1', email: 'org@demo.kr', name: '한지민', role: 'OWNER', membershipStatus: 'ACTIVE', joinedAt: T0 },

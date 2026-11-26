@@ -1,5 +1,6 @@
 import { useState, type FormEvent, type ReactNode } from 'react';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, Navigate, useNavigate, useSearchParams } from 'react-router-dom';
+import { api } from '../api';
 import { useAuth } from '../lib/auth';
 import { useToast } from '../lib/toast';
 import { errorMessage } from '../lib/useAsync';
@@ -107,8 +108,8 @@ function YouthForm() {
 
 /*
  * 기관 가입 →
- *   organizations         : 기관명 · 기관 유형 · 사업자등록번호 · 주소 · 공식 이메일 (심사 상태는 서버가 PENDING 으로)
- *   organization_profiles : 기관 소개
+ *   organizations         : 기관 코드 키 · 기관명 · 기관 유형 · 사업자등록번호 · 주소 · 공식 이메일 (심사 상태는 서버가 PENDING 으로)
+ *   organization_profiles : 빈 소개로 생성 (가입 때 받지 않음)
  *   users + org_members   : 담당자 이름 · 이메일 · 비밀번호 (role=OWNER)
  */
 function OrgForm() {
@@ -116,7 +117,7 @@ function OrgForm() {
   const navigate = useNavigate();
   const notify = useToast();
   const [f, setF] = useState({
-    name: '', organizationType: 'WELFARE_CENTER' as OrgType, businessNo: '', address: '', contactEmail: '', intro: '',
+    businessApiKey: '', name: '', organizationType: 'WELFARE_CENTER' as OrgType, businessNo: '', address: '', contactEmail: '',
     managerName: '', managerEmail: '', password: '', confirm: '', agree: false,
   });
   const [error, setError] = useState('');
@@ -127,6 +128,7 @@ function OrgForm() {
   const submit = async (e: FormEvent) => {
     e.preventDefault();
     setError('');
+    if (!f.businessApiKey.trim()) return setError('GreenStep에서 발급받은 기관 코드 키를 입력해 주세요.');
     if (!f.name.trim()) return setError('기관명을 입력해 주세요.');
     if (f.businessNo.replace(/\D/g, '').length !== 10) return setError('사업자등록번호 10자리를 입력해 주세요.');
     if (!EMAIL.test(f.contactEmail)) return setError('기관 공식 이메일 형식을 확인해 주세요.');
@@ -139,8 +141,10 @@ function OrgForm() {
     setBusy(true);
     try {
       await signupOrg({
-        organization: { name: f.name, organizationType: f.organizationType, address: f.address, contactEmail: f.contactEmail, businessNo: f.businessNo },
-        profile: { intro: f.intro },
+        organization: {
+          name: f.name, organizationType: f.organizationType, address: f.address, contactEmail: f.contactEmail, businessNo: f.businessNo,
+          businessApiKey: f.businessApiKey,
+        },
         manager: { name: f.managerName, email: f.managerEmail, password: f.password },
       });
       notify('가입 신청이 접수되었습니다. 운영자 심사 후 이용할 수 있습니다.');
@@ -154,7 +158,29 @@ function OrgForm() {
 
   return (
     <form className="form-grid" onSubmit={submit} noValidate>
-      <h2 className="wide text-lg font-bold">기관 정보</h2>
+      <h2 className="wide text-lg font-bold">기관 코드 키</h2>
+      <Field id="o-key" label="기관 코드 키" req wide help="GreenStep에서 발급받은 키를 입력해 주세요. 키 하나로 한 기관만 가입할 수 있습니다.">
+        <input
+          id="o-key"
+          value={f.businessApiKey}
+          onChange={set('businessApiKey')}
+          placeholder="예) GS-XXXX-0000"
+          maxLength={20}
+          autoComplete="off"
+          spellCheck={false}
+          style={{ textTransform: 'uppercase' }}
+        />
+      </Field>
+      {api.mode === 'mock' && (
+        <div className="alert info wide">
+          <Icon name="info" small />
+          <p className="flex-1 text-[14px]">
+            데모 기관 코드 키: <strong>GS-DEMO-0001</strong> · <strong>GS-DEMO-0002</strong> · <strong>GS-DEMO-0003</strong>
+          </p>
+        </div>
+      )}
+
+      <h2 className="wide mt-4 text-lg font-bold">기관 정보</h2>
       <Field id="o-name" label="기관명" req>
         <input id="o-name" value={f.name} onChange={set('name')} maxLength={200} />
       </Field>
@@ -173,9 +199,6 @@ function OrgForm() {
       </Field>
       <Field id="o-addr" label="기관 주소" req wide>
         <input id="o-addr" value={f.address} onChange={set('address')} placeholder="예) 서울 마포구 배움길 34" maxLength={255} />
-      </Field>
-      <Field id="o-intro" label="기관 소개" wide help="선택 입력 · ESG 경영 보고서의 기관 소개 초안에 사용됩니다">
-        <textarea id="o-intro" value={f.intro} onChange={set('intro')} rows={3} />
       </Field>
 
       <h2 className="wide mt-4 text-lg font-bold">담당자 계정</h2>
@@ -205,29 +228,31 @@ function OrgForm() {
   );
 }
 
-export default function Signup() {
-  const [params, setParams] = useSearchParams();
-  const type = params.get('type') === 'org' ? 'org' : 'youth';
+/**
+ * 회원가입 화면. 청년(/signup)과 기관(/org/signup)을 서로 다른 페이지로 나눕니다 (전환 탭 없음).
+ * 기관 회원가입 페이지에서는 헤더의 상단 메뉴를 숨깁니다 (Layout 참고).
+ */
+export default function Signup({ type }: { type: 'youth' | 'org' }) {
+  const [params] = useSearchParams();
+  // 예전 주소(/signup?type=org)로 들어오면 기관 회원가입 페이지로 보냄
+  if (type === 'youth' && params.get('type') === 'org') return <Navigate to="/org/signup" replace />;
+  const org = type === 'org';
   return (
     <div className="bg-hero py-16">
       <div className="container">
         <div className="mx-auto max-w-[760px] rounded-lg border border-line bg-white p-10">
-          <h1 className="text-[28px] font-bold">{type === 'org' ? '기관 회원가입' : '회원가입'}</h1>
-          <p className="mt-1 text-muted">
-            {type === 'org' ? '가입 신청 후 운영자 심사가 끝나면 활동 등록·기록 승인·ESG 경영 보고서를 이용할 수 있습니다.' : '활동을 신청하고 승인된 기록으로 봉사 이력서를 발급받으세요.'}
+          <p className="inline-flex items-center gap-2 text-[14px] font-bold text-hover">
+            <Icon name={org ? 'building' : 'user'} small />
+            {org ? 'Green기관 · 기관 회원' : 'Green청년 · 개인 회원'}
           </p>
-          <div className="seg mt-6 mb-8 w-full" role="group" aria-label="회원 유형">
-            <button type="button" className="flex-1" aria-pressed={type === 'youth'} onClick={() => setParams({}, { replace: true })}>
-              <span className="inline-flex items-center gap-2"><Icon name="user" small />개인(청년)</span>
-            </button>
-            <button type="button" className="flex-1" aria-pressed={type === 'org'} onClick={() => setParams({ type: 'org' }, { replace: true })}>
-              <span className="inline-flex items-center gap-2"><Icon name="building" small />기관</span>
-            </button>
-          </div>
-          {type === 'org' ? <OrgForm /> : <YouthForm />}
+          <h1 className="mt-2 text-[28px] font-bold">{org ? '기관 회원가입' : '청년 회원가입'}</h1>
+          <p className="mt-1 mb-8 text-muted">
+            {org ? 'GreenStep에서 발급받은 기관 코드 키로 가입을 신청합니다. 운영자 심사가 끝나면 활동 등록·기록 승인·ESG 경영 보고서를 이용할 수 있습니다.' : '활동을 신청하고 승인된 기록으로 봉사 이력서를 발급받으세요.'}
+          </p>
+          {org ? <OrgForm /> : <YouthForm />}
           <p className="mt-6 text-center text-[15px] text-muted">
             이미 회원이신가요?{' '}
-            <Link className="font-bold text-hover hover:underline" to={type === 'org' ? '/org/login' : '/login'}>
+            <Link className="font-bold text-hover hover:underline" to={org ? '/org/login' : '/login'}>
               로그인
             </Link>
           </p>

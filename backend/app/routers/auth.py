@@ -2,7 +2,7 @@
 import re
 
 from fastapi import APIRouter, Depends, HTTPException, Request, Response
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
@@ -24,6 +24,7 @@ router = APIRouter()
 
 PW_RULE = re.compile(r"^(?=.*[A-Za-z])(?=.*\d).{8,}$")
 BAD_LOGIN = "이메일 또는 비밀번호가 올바르지 않습니다."
+BAD_ORG_KEY = "유효하지 않거나 이미 사용된 기관 코드 키입니다. GreenStep에서 발급받은 키를 확인해 주세요."
 
 
 def _check_password(pw: str) -> None:
@@ -76,11 +77,17 @@ def signup_youth(body: s.YouthSignupIn, response: Response, db: Session = Depend
 
 @router.post("/auth/org/signup", response_model=s.SessionOut)
 def signup_org(body: s.OrgSignupIn, response: Response, db: Session = Depends(get_db)):
-    """organizations(심사 대기) + organization_profiles + 담당자 users + org_members(OWNER) 한 트랜잭션으로 생성"""
+    """organizations(심사 대기) + organization_profiles + 담당자 users + org_members(OWNER) 한 트랜잭션으로 생성.
+    GreenStep 이 발급한 미사용 기관 코드 키(organization_keys)가 있어야 가입 가능"""
     _check_password(body.manager.password)
     biz = re.sub(r"\D", "", body.organization.business_no)
     if len(biz) != 10:
         raise HTTPException(400, "사업자등록번호 10자리를 입력해 주세요.")
+    key_code = body.organization.business_api_key.strip().upper()
+    # 같은 키로 동시에 가입하는 경우를 막기 위해 행 잠금
+    key = db.scalar(select(m.OrganizationKey).where(m.OrganizationKey.key_code == key_code).with_for_update())
+    if key is None or key.organization_id is not None:
+        raise HTTPException(400, BAD_ORG_KEY)
     if db.scalar(select(m.Organization).where(m.Organization.business_no == biz)):
         raise HTTPException(409, "이미 등록된 사업자등록번호입니다.")
     email = body.manager.email.strip().lower()
@@ -91,12 +98,16 @@ def signup_org(body: s.OrgSignupIn, response: Response, db: Session = Depends(ge
     org = m.Organization(
         name=o.name.strip(), organization_type=o.organization_type, address=o.address.strip(),
         contact_email=o.contact_email.strip().lower(), business_no=biz, verification_status="PENDING",
+        business_api_key=key_code,
     )
-    org.profile = m.OrganizationProfile(intro=body.profile.intro.strip())
+    org.profile = m.OrganizationProfile(intro="")
     user = m.User(email=email, password_hash=hash_password(body.manager.password), name=body.manager.name.strip())
     member = m.OrgMember(user=user, organization=org, role="OWNER", membership_status="ACTIVE")
     db.add_all([org, user, member])
     try:
+        db.flush()  # organization_id 확정 후 키를 이 기관에 귀속
+        key.organization_id = org.organization_id
+        key.used_at = func.now()
         db.commit()
     except IntegrityError:
         db.rollback()

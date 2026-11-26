@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex" />
+  <title>GreenStep 봉사 이력서 — 디자인 목업</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@700&display=swap" />
+  <style>
+    /* 디자인 원본: mokup/청년 봉사 이력서.html (A4 2매 공식 양식) — 화면 보기 전용, 인쇄 기능 없음 */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Malgun Gothic', sans-serif; background: #e7e5e4; color: #0f172a; -webkit-font-smoothing: antialiased; word-break: keep-all; padding: 20px 12px 40px; }
+    .num { font-variant-numeric: tabular-nums; }
+    .sheet { width: 210mm; min-height: 297mm; margin: 0 auto; background: #fff; border: 1px solid #a8a29e; box-shadow: 0 10px 30px rgba(15, 23, 42, .08); padding: 13mm 15mm; display: flex; flex-direction: column; justify-content: space-between; position: relative; }
+    .sheet + .sheet { margin-top: 22px; }
+    .sample { position: absolute; top: 6mm; right: 15mm; font-size: 9.5px; font-weight: 700; color: #94a3b8; letter-spacing: .08em; }
+
+    .doc-head { border-bottom: 2px solid #0f172a; padding-bottom: 14px; margin-bottom: 20px; display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; }
+    .eyebrow { font-size: 10.5px; font-weight: 700; letter-spacing: .14em; color: #065f46; margin-bottom: 4px; }
+    h1 { font-size: 25px; font-weight: 800; letter-spacing: -.02em; line-height: 1; }
+    .lead { font-size: 11.5px; color: #475569; margin-top: 6px; }
+    .meta { border-collapse: collapse; border: 1px solid #334155; font-size: 11px; min-width: 240px; }
+    .meta th { background: #f5f5f4; color: #334155; font-weight: 700; text-align: left; padding: 4px 10px; border-right: 1px solid #cbd5e1; border-bottom: 1px solid #cbd5e1; width: 76px; }
+    .meta td { padding: 4px 10px; font-weight: 600; border-bottom: 1px solid #cbd5e1; }
+    .meta tr:last-child th, .meta tr:last-child td { border-bottom: 0; }
+    .green { color: #065f46; }
+
+    section { margin-bottom: 20px; }
+    .sec-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+    h2 { font-size: 13.5px; font-weight: 800; letter-spacing: -.01em; }
+    .sec-note { font-size: 10.5px; color: #64748b; font-weight: 600; }
+    .badge { font-size: 10.5px; font-weight: 700; color: #475569; border: 1px solid #cbd5e1; background: #fafaf9; padding: 2px 8px; }
+
+    .tbl { width: 100%; border-collapse: collapse; border: 1px solid #334155; font-size: 12px; }
+    .tbl th, .tbl td { border: 1px solid #cbd5e1; padding: 8px 12px; vertical-align: middle; text-align: left; }
+    .tbl th { background: #f5f5f4; color: #1e293b; font-weight: 700; }
+    .tbl td.r, .tbl th.r { text-align: right; }
+    .summary { font-size: 11.5px; line-height: 1.65; background: #fafaf9; color: #1e293b; }
+
+    .kpis { display: grid; grid-template-columns: repeat(4, 1fr); border: 1px solid #1e293b; }
+    .kpis > div { padding: 14px; }
+    .kpis > div + div { border-left: 1px solid #cbd5e1; }
+    .kpis > div:first-child { background: rgba(236, 253, 245, .6); }
+    .kpi-l { font-size: 11px; font-weight: 700; color: #475569; }
+    .kpi-v { font-size: 19px; font-weight: 800; margin-top: 6px; letter-spacing: -.02em; }
+    .kpi-s { font-size: 10.5px; color: #64748b; margin-top: 4px; }
+
+    .bar { width: 100%; height: 12px; background: #e7e5e4; border: 1px solid #cbd5e1; }
+    .bar > i { display: block; height: 100%; }
+    .tasks td { vertical-align: top; color: #334155; line-height: 1.6; font-size: 11.5px; }
+    .tasks strong { display: block; color: #0f172a; margin-bottom: 2px; }
+
+    .foot { padding-top: 12px; border-top: 1px solid #94a3b8; display: flex; justify-content: space-between; gap: 12px; font-size: 10.5px; color: #475569; }
+    .foot b { color: #0f172a; }
+
+    .p2-head { border-bottom: 2px solid #0f172a; padding-bottom: 8px; margin-bottom: 12px; display: flex; justify-content: space-between; font-size: 11px; }
+    .p2-head strong { font-size: 13px; font-weight: 800; }
+    .p2-head .sep { color: #94a3b8; margin: 0 10px; }
+
+    .card { border: 1px solid #1e293b; background: #fff; }
+    .card + .card { margin-top: 10px; }
+    .card-head { background: #f5f5f4; border-bottom: 1px solid #cbd5e1; padding: 6px 10px; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+    .card-head .l { display: flex; align-items: center; gap: 8px; min-width: 0; }
+    .no { background: #0f172a; color: #fff; font-size: 10.5px; font-weight: 800; padding: 2px 6px; }
+    .cat { background: #fff; border: 1px solid #94a3b8; font-size: 10.5px; font-weight: 700; padding: 2px 6px; white-space: nowrap; }
+    .card-head h3 { font-size: 12.5px; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .card-head .r { display: flex; gap: 8px; align-items: center; white-space: nowrap; font-size: 11px; font-weight: 700; color: #334155; }
+    .card-head .r .v { font-size: 12.5px; font-weight: 800; color: #065f46; }
+    .spec { width: 100%; border-collapse: collapse; }
+    .spec tr + tr { border-top: 1px solid #cbd5e1; }
+    .spec th { width: 82px; background: #f5f5f4; font-size: 11.5px; font-weight: 700; color: #334155; text-align: center; padding: 5px 10px; border-right: 1px solid #cbd5e1; white-space: nowrap; }
+    .spec td { font-size: 12px; font-weight: 500; padding: 5px 10px; line-height: 1.4; }
+    .spec .dim { color: #475569; }
+    .spec .sepl { color: #94a3b8; margin: 0 8px; }
+    .body { padding: 6px 10px; font-size: 11.5px; line-height: 1.45; border-top: 1px solid #cbd5e1; border-bottom: 1px solid #cbd5e1; }
+    .body b { margin-right: 6px; }
+    .card-foot { background: #fafaf9; padding: 4px 10px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; font-size: 10.5px; color: #334155; }
+    .chip { background: #fff; border: 1px solid #94a3b8; font-weight: 700; color: #0f172a; padding: 0 6px; }
+    .ok { background: #ecfdf5; border: 1px solid #047857; color: #064e3b; font-weight: 800; padding: 0 6px; }
+
+    .final { padding-top: 12px; border-top: 2px solid #0f172a; display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+    .final p { font-size: 10.5px; color: #475569; line-height: 1.6; }
+    .final p:first-child { font-weight: 700; color: #0f172a; }
+    .issuer { display: flex; align-items: center; gap: 12px; flex: none; text-align: right; }
+    .issuer small { display: block; font-size: 10px; color: #64748b; font-weight: 600; }
+    .issuer strong { font-size: 13px; font-weight: 800; }
+    .seal { width: 66px; height: 66px; border: 2.5px solid #b91c1c; color: #b91c1c; font-family: 'Noto Serif KR', Georgia, serif; font-weight: 700; font-size: 13px; display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, 1fr); place-items: center; padding: 4px; position: relative; user-select: none; }
+    .seal::after { content: ''; position: absolute; inset: 2px; border: 1px solid rgba(185, 28, 28, .45); }
+
+    /* 화면 보기 전용 목업 — 인쇄하지 않음 */
+    @media print { body { display: none !important; } }
+  </style>
+</head>
+<body>
+  <main id="app"></main>
+
+  <script src="greenstep-data.js"></script>
+  <script>
+    (function () {
+      var G = window.GreenStepMock, f = G.fmt;
+      var r = G.resume('u1');
+      var months = (Number(r.last.slice(0, 4)) - Number(r.first.slice(0, 4))) * 12 + Number(r.last.slice(5, 7)) - Number(r.first.slice(5, 7)) + 1;
+      var top = r.byCategory.slice().sort(function (a, b) { return b.hours - a.hours; }).filter(function (c) { return c.hours > 0; });
+      var BAR = { care: '#1e293b', education: '#256ef4', environment: '#065f46', health: '#64748b' };
+
+      var summary = months + '개월 동안 ' + top.slice(0, 2).map(function (c) { return c.label; }).join('과 ') + ' 분야를 중심으로 ' + r.orgCount + '개 기관에서 '
+        + r.sessions + '회, 총 ' + f.num(r.totalHours) + '시간의 봉사활동을 기관 승인받았습니다. 아동 1:1 돌봄과 홀몸 어르신 방문처럼 직무 난이도 가중치가 적용된 활동이 전체 시간의 '
+        + f.pct(r.weightedShare) + '를 차지하며, 이를 사회적 가치로 환산하면 ' + f.won(r.totalValue) + '원입니다.';
+
+      var catRows = r.byCategory.map(function (c) {
+        return '<tr><td><b>' + c.label + '</b></td><td><div class="bar"><i style="width:' + (c.share * 100).toFixed(1) + '%;background:' + BAR[c.category] + '"></i></div></td>'
+          + '<td class="r num">' + f.num(c.hours) + 'h</td><td class="r num"><b>' + f.pct(c.share) + '</b></td></tr>';
+      }).join('');
+
+      var taskCols = r.activities.slice(0, 4).map(function (a) {
+        return '<td><strong>' + a.details.target_group + ' · ' + a.categoryLabel + '</strong>' + a.details.tasks + '. ' + a.details.summary + '</td>';
+      }).join('');
+      var taskHeads = r.activities.slice(0, 4).map(function (a, i) {
+        return '<th style="width:25%">수행 업무 0' + (i + 1) + '. ' + a.activity.title + '</th>';
+      }).join('');
+
+      var cards = r.activities.map(function (a, i) {
+        var weighted = a.weight > 1;
+        return '<div class="card">'
+          + '<div class="card-head"><div class="l"><span class="no num">No.0' + (i + 1) + '</span><span class="cat">' + a.categoryLabel + '</span><h3>' + a.activity.title + '</h3></div>'
+          + '<div class="r num"><span>' + f.num(a.hours) + '시간</span><span style="color:#cbd5e1">|</span><span class="v">' + f.won(a.value) + '원</span></div></div>'
+          + '<table class="spec"><tbody>'
+          + '<tr><th>활동일시</th><td class="num"><b>' + f.dot(a.first) + ' ~ ' + f.dot(a.last) + '</b><span class="sepl">|</span><span class="dim">회당 ' + a.details.hours_per_session.toFixed(1) + '시간 × ' + a.sessions + '회 (승인 ' + f.num(a.hours) + '시간)</span></td></tr>'
+          + '<tr><th>활동장소</th><td>' + a.activity.address + '</td></tr>'
+          + '<tr><th>확인기관</th><td><b>' + a.org.name + '</b><span class="sepl">|</span><span class="dim">' + a.orgTypeLabel + ' · GreenStep 심사 승인 기관</span></td></tr>'
+          + '</tbody></table>'
+          + '<div class="body"><b>[수행 내용]</b>' + a.activity.description + ' 대상: ' + a.details.target_group + ' · 업무: ' + a.details.tasks + '.</div>'
+          + '<div class="card-foot num"><span>표준 단가 <b>' + f.won(a.rate) + '원</b> · 직무 난이도: <b>' + (weighted ? a.details.difficulty_reason + ' (+0.2)' : '일반') + '</b> · <span class="chip">적용 가중치 ' + a.weight.toFixed(1) + '</span></span>'
+          + '<span><span class="ok">[기관 승인 완료]</span> 담당자 승인 · 최종 ' + f.dot(a.lastApproved) + '</span></div>'
+          + '</div>';
+      }).join('');
+
+      document.getElementById('app').innerHTML =
+        '<article class="sheet">'
+        + '<span class="sample">디자인 목업 · 예시 데이터</span>'
+        + '<div>'
+        + '<header class="doc-head"><div><p class="eyebrow">GREENSTEP VERIFIED VOLUNTEER RESUME</p><h1>봉사 이력서</h1>'
+        + '<p class="lead">기관 승인(APPROVED) 봉사활동 기록과 사회적 가치(SROI) 환산 결과를 담은 확인 서류</p></div>'
+        + '<table class="meta num"><tbody>'
+        + '<tr><th>확인번호</th><td>' + r.confirmNo + '</td></tr>'
+        + '<tr><th>발급일자</th><td>' + f.dot(r.issuedAt) + '</td></tr>'
+        + '<tr><th>집계기준</th><td class="green">기관 승인 기록 · 제출 시점 스냅샷</td></tr>'
+        + '</tbody></table></header>'
+
+        + '<section><div class="sec-head"><h2>01. 인적사항</h2><span class="badge">희망 분야: ' + r.profile.target_field + '</span></div>'
+        + '<table class="tbl"><tbody>'
+        + '<tr><th style="width:15%">성명</th><td style="width:35%"><b>' + r.user.name + '</b></td><th style="width:16%">이메일</th><td style="width:34%">' + r.user.email + '</td></tr>'
+        + '<tr><th>학교 · 전공</th><td>' + r.profile.school + '</td><th>활동 기간</th><td class="num"><b>' + f.dot(r.first).slice(0, 7) + ' ~ ' + f.dot(r.last).slice(0, 7) + ' (' + months + '개월)</b></td></tr>'
+        + '<tr><th style="vertical-align:top">활동 요약</th><td colspan="3" class="summary">' + summary + '</td></tr>'
+        + '</tbody></table></section>'
+
+        + '<section><div class="sec-head"><h2>02. 사회적 가치(SROI) 요약</h2><span class="sec-note">집계 범위: 기관 승인 기록 ' + r.sessions + '건</span></div>'
+        + '<div class="kpis num">'
+        + '<div><p class="kpi-l">창출 사회적 가치</p><p class="kpi-v green">' + f.won(r.totalValue) + '원</p><p class="kpi-s">시간 × 표준 단가 × 가중치</p></div>'
+        + '<div><p class="kpi-l">기관 승인 봉사 시간</p><p class="kpi-v">' + f.num(r.totalHours) + '시간</p><p class="kpi-s">' + r.orgCount + '개 기관 · ' + r.sessions + '회</p></div>'
+        + '<div><p class="kpi-l">가중치 적용 활동 비중</p><p class="kpi-v">' + f.pct(r.weightedShare) + '</p><p class="kpi-s">직무 난이도(+0.2) 확정 활동</p></div>'
+        + '<div><p class="kpi-l">기관 승인률</p><p class="kpi-v">' + f.pct(r.approvalRate) + '</p><p class="kpi-s">승인 ' + r.sessions + '건 · 반려 ' + r.rejectedCount + '건</p></div>'
+        + '</div></section>'
+
+        + '<section style="margin-bottom:0"><div class="sec-head"><h2>03. 분야별 활동 비중과 수행 업무</h2><span class="sec-note">승인 시간 기준</span></div>'
+        + '<table class="tbl" style="font-size:11.5px;margin-bottom:14px"><thead><tr><th style="width:24%">분야</th><th style="width:48%">활동 비중</th><th class="r" style="width:13%">승인 시간</th><th class="r" style="width:15%">비중</th></tr></thead><tbody>' + catRows + '</tbody></table>'
+        + '<table class="tbl tasks"><thead><tr style="font-size:11.5px">' + taskHeads + '</tr></thead><tbody><tr>' + taskCols + '</tr></tbody></table>'
+        + '</section>'
+        + '</div>'
+        + '<footer class="foot"><span>GreenStep · 이 서류는 2매로 구성되며, 제2면에서 기관별 활동 기록을 확인할 수 있습니다.</span><b class="num">PAGE 1 / 2</b></footer>'
+        + '</article>'
+
+        + '<article class="sheet">'
+        + '<span class="sample">디자인 목업 · 예시 데이터</span>'
+        + '<div>'
+        + '<header class="p2-head"><div><strong>봉사 이력서</strong><span class="sep">|</span><b>' + r.user.name + ' · ' + r.profile.school + '</b></div><div class="num">확인번호 <b>' + r.confirmNo + '</b></div></header>'
+        + '<section><div class="sec-head" style="margin-bottom:8px"><h2>04. 기관 승인 봉사활동 기록</h2><span class="sec-note">기관 담당자 승인 완료 (총 ' + r.activities.length + '개 활동 · ' + r.sessions + '건)</span></div>'
+        + cards
+        + '<p class="sec-note" style="margin-top:8px">※ 승인 대기 ' + r.pendingCount + '건과 반려 ' + r.rejectedCount + '건은 이력서에 반영하지 않았습니다.</p>'
+        + '</section>'
+        + '</div>'
+        + '<footer class="final"><div>'
+        + '<p>위 기록은 각 활동 기관 담당자의 승인(APPROVED)을 거친 GreenStep 확인 기록입니다.</p>'
+        + '<p>• 사회적 가치는 기록 제출 시점의 표준 단가(' + f.won(G.rates.base) + '원, 돌봄·보육 ' + f.won(G.rates.care) + '원)와 기관 가중치 스냅샷으로 산정했습니다.</p>'
+        + '<p>• 확인번호(<b class="num">' + r.confirmNo + '</b>)로 GreenStep <b>확인번호 조회(/verify)</b>에서 진위를 확인할 수 있습니다.</p>'
+        + '</div><div class="issuer"><div><small>발급</small><strong>GreenStep</strong><small class="num">PAGE 2 / 2</small></div>'
+        + '<div class="seal" aria-label="GreenStep 확인 직인"><span>그</span><span>린</span><span>스</span><span>텝</span><span>확</span><span>인</span></div></div>'
+        + '</footer>'
+        + '</article>';
+    })();
+  </script>
+</body>
+</html>

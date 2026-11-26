@@ -19,10 +19,10 @@
 2. 백엔드·DB·워커 구현 **허용** (예전의 "백엔드 구현 금지" 규칙은 폐기됨). 단 프론트 `Api` 인터페이스 + mock 구현은 계속 유지한다.
 3. **디자인은 원본 시안 그대로** — `src/GreenStep_mokup.html` (파랑 `#256ef4`, KRDS풍). 새 요소도 원본 CSS 클래스·토큰(`web/src/styles/original.css`)으로 만든다.
 4. 요구사항 질문은 **AskUserQuestion 선택창** 형식으로 한다.
-5. 커밋/푸시는 요청 있을 때만. 커밋 작성자는 레포 로컬 설정(`2YoonJae` + GitHub noreply 이메일)을 쓴다. 개인 이메일을 커밋에 넣지 않는다.
+5. 커밋/푸시는 요청 있을 때만. 커밋 작성자는 레포 로컬 설정(`2YoonJae` + GitHub noreply `265695545+2YoonJae@users.noreply.github.com`)을 쓴다. 전역 git 설정은 개인 이메일이므로 커밋 전 `git config --local user.email`이 noreply인지 확인한다. 개인 이메일을 커밋에 넣지 않는다.
 6. 이미 확정된 결정(아래)은 다시 묻지 않는다. 보류 항목만 새로 확인한다.
 7. **비밀값은 절대 출력·커밋하지 않는다** — `src/api/.env`(1365 인증키). 공개 레포이므로 커밋 전 `git status`로 `.env`·덤프·개인정보 파일이 없는지 확인한다.
-8. 디자인 참고 파일(`src/ESG_보고서_*.pdf`, `GreenStep_mokup.html`, `청년 보고서.html`)은 `.git/info/exclude`로 **공개 레포에서 제외**했다. 연락처 등 개인정보가 들어 있을 수 있으므로 사용자 허락 없이 올리지 않는다.
+8. 디자인 참고 파일(`src/ESG_보고서_*.pdf`, `GreenStep_mokup.html`, `청년 보고서.html`, 레포 안 `mokup/` 폴더)은 `.git/info/exclude`로 **공개 레포에서 제외**했다. 연락처 등 개인정보가 들어 있을 수 있으므로 사용자 허락 없이 올리지 않는다.
 
 ## 명칭 (확정)
 
@@ -46,17 +46,18 @@ esg/
    ├─ api/                     # 1365 수집 워커: greenstep_collector.py, .env(비밀), .env.example, Dockerfile
    │                           #   data/*.json 은 옛 파일 수집 방식의 잔재(미사용, git 제외)
    ├─ backend/                 # FastAPI + SQLAlchemy 2 + Alembic + psycopg3 + argon2 + PyJWT
-   │  ├─ alembic/versions/     # 0001 스키마(.sql 원본+.py), 0002 수집 테이블, 0003 image_url 삭제
+   │  ├─ alembic/versions/     # 0001 스키마(.sql 원본+.py), 0002 수집 테이블, 0003 image_url 삭제, 0004 기관 코드 키
    │  └─ app/                  # main, config, db, models, schemas(camelCase), security, domain, deps, seed
    │     └─ routers/           # auth, org, public
    └─ web/                     # React 18.3 + TS 5.6 + Vite 6 + Tailwind 4.1 + react-router 6
       ├─ public/brand/         # greenstep-mark.png(로고), favicon.png, apple-touch-icon.png
       ├─ public/images/        # 배너 사진 hero/education/care.png (animals·digital·environment·food.jpg는 미사용)
+      ├─ public/mockups/       # 문서 디자인 목업: resume.html, report-a/b/c.html + greenstep-data.js(DB 테이블 형태 예시 데이터)
       └─ src/
          ├─ api/               # types.ts(Api 인터페이스), endpoints.ts, http/, mock/, index.ts(모드 전환)
          ├─ data/              # types.ts(테이블 형태 타입), seed.ts(mock 전용)
          ├─ lib/               # sroi, difficulty, aggregate, menu(포털·메뉴), auth, theme, csv …
-         ├─ components/        # Layout(포털 탭·유틸바·메가메뉴), HeroBanner, SubPage, Guards, ui
+         ├─ components/        # Layout(포털 탭·유틸바·메가메뉴), HeroBanner, SubPage, Guards, Dialog, DocMockupDialog(홈 문서 목업 보기 창), ui
          ├─ pages/             # Home, Activities, ActivityDetail, Support, Verify, Login, Signup
          │  ├─ youth/          # MyPage, Records, RecordNew, Resume
          │  └─ org/            # Dashboard, OrgActivities, ActivityForm, Reports(ESG 경영 보고서)
@@ -68,6 +69,7 @@ esg/
 - Docker (기본): `cd src && docker compose up -d --build`
   - 웹 http://localhost:8080 (`WEB_PORT`), API 문서 http://localhost:8080/api/v1/docs
   - DB 호스트 포트 `127.0.0.1:5433` (`DB_PORT`). 이 PC에는 별도의 Windows PostgreSQL 19 서비스가 5432를 쓰고 있어 5433으로 피했다 (건드리지 않음).
+  - 컨테이너 이름이 고정(`container_name: greenstep-*`)이라, 다른 폴더/프로젝트명으로 띄운 같은 이름 컨테이너가 남아 있으면 `Conflict. The container name "/greenstep-web" is already in use` 오류가 난다 → `docker rm -f greenstep-web` 후 다시 `up -d --build` (볼륨은 그대로)
   - `api/.env`가 없으면 compose 전체가 실패한다 (`env_file` 필수). 다른 PC에서는 `copy api\.env.example api\.env` 후 Decoding 키 입력. → `required: false`로 바꾸자는 제안이 미결정 상태.
 - 웹만 개발: `cd src/web && npm install && npm run dev` (http://localhost:5173)
 - API 모드 `VITE_API_MODE`: Docker 빌드 기본 **http**(DB 사용), `web/.env.example`·로컬 dev 기본 **mock**
@@ -83,7 +85,8 @@ esg/
 - 노션 11개 테이블: users, organizations, org_members, activities, applications, participations, evidence_documents, verification_logs, record_attributions, valuation_rules, social_value_calculations
 - 확장 1:1 테이블 (사용자가 "확장 테이블로 분리" 선택): user_profiles, organization_profiles, activity_details
 - 수집용: sync_runs, external_sync_state
-- 노션과 다르게 정한 점 (ERD 기준): `business_no` 숫자 10자리 VARCHAR(10), `businiess_api_key`·`org_members.password_hash` 없음, DATETIME → TIMESTAMPTZ, 상태값은 영문 코드 + CHECK
+- 기관 코드 키: `organization_keys`(key_code PK, organization_id UNIQUE, issued_at, used_at) + `organizations.business_api_key` (0004). 기관 가입은 **발급된 미사용 키**가 있어야 통과, 쓰인 키는 그 기관에 귀속. 키가 맞아도 심사 대기(PENDING)는 유지. 데모 키 `GS-DEMO-0001~0003` (`DEMO_MODE`, mock `seedOrgKeys`)
+- 노션과 다르게 정한 점 (ERD 기준): `business_no` 숫자 10자리 VARCHAR(10), `org_members.password_hash` 없음, `businiess_api_key`는 0004에서 `business_api_key`로 추가, DATETIME → TIMESTAMPTZ, 상태값은 영문 코드 + CHECK
 - 기관 유형은 노션 예시 기준. 공고 상태: `DRAFT` / `RECRUITING` / `CLOSED` / `CANCELLED`. 출처 `source_type`: `GREENSTEP` / `1365`
 - 스키마 변경은 새 Alembic 마이그레이션으로 (기존 0001~0003 수정 금지). backend 컨테이너가 시작 시 `alembic upgrade head` 실행.
 
@@ -115,17 +118,21 @@ esg/
 - 1365 확인서 기록은 `EXTERNAL_PENDING`(검증 대기)
 - **기관 ESG 등급은 매기지 않는다** (등급 표시 제거됨)
 - 봉사 이력서: A4, 확인번호, `/verify`에서 진위 조회
+- **홈 문서 목업**: 「함께한 시간은 얼마의 가치가 될까요?」의 봉사 이력서 / ESG 경영 보고서 버튼 → 보기 창(`DocMockupDialog`, iframe)으로 `public/mockups/` 목업 표시. 보고서는 A안(Ocean Corporate)·B안(Editorial Mono)·C안(Swiss Grid) 탭. 원본 디자인은 `mokup/`(이력서 HTML, 보고서 PDF). **보기 전용 — 인쇄·다운로드 기능 없음**(`@media print` 숨김). 수치는 `greenstep-data.js`의 DB 테이블 형태 예시 행에서 집계(김지원 이력서, 성남 이웃돌봄복지관 2026 보고서). ESG 등급·연락처는 넣지 않음
 - ESG 경영 보고서: 미리보기(워터마크) → "결제 완료"(데모) → 발행, 확인번호 `GS-YYYY-xxxx-XXXX` → `/verify`. 발행 후 수정 = 새 버전
 - AI 초안: 인사말·기관소개만, 섹션당 3회 (placeholder, 모델 미정)
-- 기관 가입 → 운영자 **심사 대기** (데모 승인 버튼). 운영자 화면은 범위 제외
+- 기관 가입 → 기관 코드 키 확인 → 운영자 **심사 대기** (데모 승인 버튼). 운영자 화면(키 발급 포함)은 범위 제외. 가입 때 기관 소개는 받지 않음
 
 ## 확정된 UI 결정
 
-- **포털 분리**: 유틸바 왼쪽에 1365자원봉사포털/기부포털 같은 탭 `Green청년` / `Green기관`. 포털은 경로로 판정(`lib/menu.ts` `portalOfPath`), 공통 화면은 직전 포털 유지(sessionStorage `greenstep-portal`)
+- **포털 분리**: 유틸바 왼쪽에 1365자원봉사포털/기부포털 같은 탭 `Green청년` / `Green기관`. 포털은 경로로 판정(`lib/menu.ts` `portalOfPath`), 공통 화면은 기관 세션일 때만 직전 포털 유지(sessionStorage `greenstep-portal`), 아니면 Green청년
   - Green청년 메뉴: 봉사활동 찾기 · 봉사 이력서 · 고객지원
   - Green기관 메뉴: 기관 대시보드 · 활동 관리 · ESG 경영 보고서 · 고객지원
   - Green기관 탭: 로그인 안 했으면 `/org/login`, 기관 로그인 상태면 `/org`
-- **로그인 페이지 분리**: 청년 `/login`, 기관 `/org/login` (전환 탭 없음). `/org/login`에서는 상단 메뉴·메가메뉴를 숨김. 옛 주소 `/login?type=org`는 `/org/login`으로 리다이렉트. 회원가입은 `/signup`, `/signup?type=org` (탭 유지)
+  - **기관 포털 완전 분리**: Green기관 상단 메뉴는 **기관 회원 로그인 후에만** 보인다 (`Layout` `bare = portal==='ORG' && !기관세션`). 로그인 전 `/org/*` 기관 전용 화면은 `/org/login?next=`로 리다이렉트(`RequireRole`). 공통 화면(고객지원·확인번호 조회)은 기관 세션이 없으면 항상 Green청년으로 표시
+- **로그인 페이지 분리**: 청년 `/login`, 기관 `/org/login` (전환 탭·서로 가는 링크 없음). 옛 주소 `/login?type=org`는 `/org/login`으로 리다이렉트
+- **회원가입 페이지 분리**: 청년 `/signup`, 기관 `/org/signup` (전환 탭 없음). 옛 주소 `/signup?type=org`는 `/org/signup`으로 리다이렉트
+- `/org/login`·`/org/signup`에서는 상단 메뉴·메가메뉴를 숨김 (`Layout` `bare`)
 - **로고**: `public/brand/greenstep-mark.png` + "GreenStep", 클릭 시 홈(홈이면 맨 위로). 파비콘도 같은 라벨 이미지
   - 로고 아래 문구: 청년 포털 "청년의 실천을, 사회적 가치로", 기관 포털 **"기관의 실천을 ESG경영으로"**
 - **유틸바 오른쪽**: 다크모드 스위치(로그인 왼쪽) · 로그인 · 회원가입 (유틸바의 "기관 로그인" 링크는 제거). 로그인 후 `김지원님 · 마이페이지`(청년 → `/me`), `담당자명님 · 마이페이지`(기관 → `/org`)
@@ -138,6 +145,21 @@ esg/
 - 활동 목록에 `GreenStep 공고` / `1365 공고` 탭, 1365 상세는 출처 표기 + 원문 신청 링크
 - 다크모드 `<html data-theme>`, localStorage `greenstep-theme`. 문서(이력서·보고서)는 항상 라이트
 - 글자·화면 설정 기능 제거. 컨테이너 폭 1200px, 카드 제목 2줄
+
+## 작업 이력 (커밋 단위 요약)
+
+1. `bdf773c` 최초 구현 — 청년/기관 포털, 공고 목록·상세, 활동 기록, 봉사 이력서, ESG 경영 보고서(mock), FastAPI·DB·1365 워커
+2. `ebbd0f7` CLAUDE.md 추가
+3. 기관 가입·포털 분리·문서 목업 (2026-11-26)
+   - 로그인 페이지 하단의 "기관/청년 담당자인 경우 로그인" 링크 제거
+   - 회원가입 `/signup`(청년) · `/org/signup`(기관) 분리, 기관 가입에서 기관 소개 제거, `/org/signup` 상단 메뉴 숨김
+   - 기관 코드 키: Alembic 0004 `organization_keys` + `organizations.business_api_key`, 가입 시 키 검증(`FOR UPDATE`, 대문자 정규화), mock도 동일 규칙
+   - 기관 포털 완전 분리: 기관 메뉴는 기관 로그인 후에만, 비로그인 `/org/*` → `/org/login` 리다이렉트
+   - 홈 문서 목업 보기 창(이력서 + 보고서 A·B·C안), 데이터는 `public/mockups/greenstep-data.js`
+     - 이력서(김지원): 115시간 · 1,383,552원 · 3개 기관 · 승인률 97.8% · `GSR-2026-0001-K8TZ`
+     - 보고서(성남 이웃돌봄복지관 2026.01~11): 청년 48명 · 1,617시간 · 19,587,888원 · 승인률 97.5% · `GS-2026-0001-7Q4M`
+     - 원본 대비 변경: 생년월일·연락처·담당자명 제외(DB에 없음), "ESG 평가 A+" → 기관 승인률, QR → 확인번호 + `/verify`
+     - 목업 글꼴은 CDN(Pretendard·Google Fonts) — 오프라인이면 기본 글꼴. B안 제목체는 Black Han Sans로 대체
 
 ## 앞으로의 방향 (다음 단계 후보)
 

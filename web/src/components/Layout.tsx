@@ -27,11 +27,12 @@ function ThemeSwitch() {
 }
 
 /* ───────── 포털 (Green청년 / Green기관) ─────────
- * 경로로 정해지고, 고객지원처럼 공통 화면에서는 직전 포털을 유지합니다. */
+ * 경로로 정해지고, 고객지원처럼 공통 화면에서는 직전 포털을 유지합니다.
+ * 단, 기관 회원으로 로그인하지 않았으면 공통 화면은 항상 Green청년으로 봅니다. */
 
 const PORTAL_KEY = 'greenstep-portal';
 
-function usePortal(): Portal {
+function usePortal(isOrgSession: boolean): Portal {
   const { pathname, search } = useLocation();
   const fromPath = portalOfPath(pathname, search);
   const [last, setLast] = useState<Portal>(() => {
@@ -50,7 +51,7 @@ function usePortal(): Portal {
       /* 무시 */
     }
   }, [fromPath]);
-  return fromPath ?? last;
+  return fromPath ?? (isOrgSession ? last : 'YOUTH');
 }
 
 /** 로고 — 라벨 이미지 + 이름. 누르면 홈으로 (이미 홈이면 맨 위로) */
@@ -101,7 +102,7 @@ function UtilityBar({ portal }: { portal: Portal }) {
           {!session && (
             <>
               <Link className="text-button login" to={portal === 'ORG' ? '/org/login' : '/login'}>로그인</Link>
-              <Link className="text-button join" to={portal === 'ORG' ? '/signup?type=org' : '/signup'}>회원가입</Link>
+              <Link className="text-button join" to={portal === 'ORG' ? '/org/signup' : '/signup'}>회원가입</Link>
             </>
           )}
           {session?.role === 'YOUTH' && (
@@ -137,7 +138,7 @@ function UtilityBar({ portal }: { portal: Portal }) {
  * 상단 메뉴에 마우스를 올리면 전체 하위 메뉴가 한 번에 내려오고,
  * 각 하위 메뉴 열은 해당 상단 메뉴 바로 아래에 정렬됩니다. 헤더 밖으로 나가면 닫힙니다. */
 
-function Header({ portal }: { portal: Portal }) {
+function Header({ portal, isOrgSession }: { portal: Portal; isOrgSession: boolean }) {
   const [open, setOpen] = useState(false);
   const [hot, setHot] = useState<MenuSection['key'] | null>(null);
   const [mobile, setMobile] = useState(false);
@@ -173,8 +174,9 @@ function Header({ portal }: { portal: Portal }) {
     }, 120);
   };
 
-  // 기관 로그인 페이지에서는 상단 메뉴(기관 대시보드·활동 관리 등)를 모두 숨김
-  const bare = pathname === '/org/login';
+  // Green기관 상단 메뉴(기관 대시보드·활동 관리 등)는 기관 회원으로 로그인한 뒤에만 보임.
+  // 로그인 전의 기관 화면(/org/login · /org/signup 등)은 메뉴 없이 로고만 표시
+  const bare = portal === 'ORG' && !isOrgSession;
   const menu = bare ? [] : MENU.filter((m) => m.portals.includes(portal));
 
   // 원본 시안처럼 홈에서는 '봉사활동 찾기'가 현재 메뉴
@@ -301,7 +303,9 @@ const INFO = {
 export function Layout({ children }: { children: ReactNode }) {
   const [info, setInfo] = useState<keyof typeof INFO | null>(null);
   const { pathname } = useLocation();
-  const portal = usePortal();
+  const { session } = useAuth();
+  const isOrgSession = session?.role === 'ORG';
+  const portal = usePortal(isOrgSession);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -311,7 +315,7 @@ export function Layout({ children }: { children: ReactNode }) {
     <>
       <a className="skip" href="#main">본문 바로가기</a>
       <UtilityBar portal={portal} />
-      <Header portal={portal} />
+      <Header portal={portal} isOrgSession={isOrgSession} />
       <main id="main">{children}</main>
       <Footer onInfo={setInfo} />
       <Dialog open={info !== null} title={info ? INFO[info][0] : ''} onClose={() => setInfo(null)}>

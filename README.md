@@ -53,7 +53,7 @@
 | 포털 | 대상 | 메뉴 |
 | --- | --- | --- |
 | **Green청년** | 개인(청년) 회원 | 봉사활동 찾기 · 봉사 이력서 · 고객지원 |
-| **Green기관** | 기관 담당자 | 기관 대시보드 · 활동 관리 · ESG 경영 보고서 · 고객지원 |
+| **Green기관** | 기관 담당자 | 기관 대시보드 · 활동 관리 · ESG 경영 보고서 · 고객지원 (기관 로그인 후에만 메뉴 표시) |
 
 > [!NOTE]
 > 수업 시연용 프로젝트입니다. 화면 속 기관과 공고(1365 수집분 제외)는 예시이며, 실제 모집·인증 서비스는 제공하지 않습니다.
@@ -70,10 +70,17 @@
 - **봉사 이력서** — 기관 승인 기록만으로 A4 이력서 발급, 확인번호 부여, `/verify`에서 진위 조회
 - **마이페이지** — 오른쪽 위 `홍길동님 · 마이페이지`에서 신청 내역·누적 가치·프로필 관리
 
+### 홈 문서 목업
+
+- 「함께한 시간은 얼마의 가치가 될까요?」의 **봉사 이력서 / ESG 경영 보고서** 버튼 → 보기 창에서 디자인 목업 표시 (보고서는 A·B·C안 탭). 보기 전용(인쇄·다운로드 없음)
+- 파일: `web/public/mockups/` — `resume.html`, `report-a.html`(Ocean Corporate), `report-b.html`(Editorial Mono), `report-c.html`(Swiss Grid)
+- 수치: `greenstep-data.js` 가 DB 테이블과 같은 이름·컬럼의 예시 행(organizations, activities, activity_details, participations, social_value_calculations …)을 갖고, 기관 승인 기록만 집계
+
 ### Green기관
 
-- **기관 회원가입** — 사업자등록번호 등 기관 정보 입력 → 운영자 **심사 대기** → 승인 후 공고 등록 가능
+- **기관 회원가입** (`/org/signup`) — GreenStep이 발급한 **기관 코드 키** + 사업자등록번호 등 기관 정보 입력 → 운영자 **심사 대기** → 승인 후 공고 등록 가능. 청년 회원가입(`/signup`)과 분리된 페이지, 상단 메뉴 없음
 - **기관 전용 로그인** (`/org/login`) — 청년 로그인과 분리된 페이지, 상단 메뉴 없이 로그인만
+- **청년 포털과 분리** — Green기관 상단 메뉴는 기관 로그인 후에만 보이고, 로그인 전 기관 화면(`/org/*`)은 기관 로그인 페이지로 이동
 - **활동 관리** — DB 컬럼과 1:1로 맞춘 공고 작성 폼, 임시저장·게시·마감, 난이도 가중치 자동 후보 표시
 - **기관 대시보드** — 승인 대기 기록 승인/반려(사유), 일괄 승인, KPI
 - **ESG 경영 보고서** — 월별·활동별 집계, 워터마크 미리보기 → 결제(데모) → 발행(확인번호 `GS-YYYY-xxxx-XXXX`)
@@ -173,6 +180,7 @@ erDiagram
 | --- | --- |
 | **노션 기준 11개** | `users` · `organizations` · `org_members` · `activities` · `applications` · `participations` · `evidence_documents` · `verification_logs` · `record_attributions` · `valuation_rules` · `social_value_calculations` |
 | **확장 3개 (1:1)** | `user_profiles` (학교·희망 분야·마케팅 동의) · `organization_profiles` (기관 소개) · `activity_details` (한 줄 소개·회당 시간·대상·수행 업무·가중치·조회수) |
+| **기관 코드 키 1개** | `organization_keys` (발급 키·사용 기관·사용일) — 미사용 키만 기관 가입에 쓸 수 있음 |
 | **수집 워커용 2개** | `sync_runs` (수집 실행 기록) · `external_sync_state` (상세조회 시각) |
 
 ### 웹 입력 ↔ 테이블
@@ -180,7 +188,7 @@ erDiagram
 | 화면 | 저장 위치 |
 | --- | --- |
 | 청년 회원가입 | `users` (email, password_hash, name) + `user_profiles` |
-| 기관 회원가입 | `organizations` (verification_status = `PENDING`) + `organization_profiles` + 담당자 `users` + `org_members` (role = `OWNER`) |
+| 기관 회원가입 | `organization_keys` 확인·귀속 + `organizations` (verification_status = `PENDING`, business_api_key) + `organization_profiles`(빈 소개) + 담당자 `users` + `org_members` (role = `OWNER`) |
 | 기관 공고 등록 | `activities` (제목·분야·모집/활동 기간·정원·지역·상태) + `activity_details` |
 | 1365 공고 수집 | `activities` (source_type = `1365`) + `activity_details` |
 
@@ -188,10 +196,12 @@ erDiagram
 <summary><b>노션 표와 다르게 정한 점 (ERD 기준)</b></summary>
 
 - `business_no` 는 UUID가 아니라 숫자 10자리 `VARCHAR(10)`
-- `businiess_api_key`, `org_members.password_hash` 는 ERD에 없어 만들지 않음
+- `org_members.password_hash` 는 ERD에 없어 만들지 않음
+- `businiess_api_key` 는 0001 에서 뺐다가 `0004` 에서 `organizations.business_api_key VARCHAR(20)` (철자 수정)로 추가 — 기관 코드 키
 - `DATETIME` → `TIMESTAMPTZ`
 - 상태값은 영문 코드 + `CHECK` 제약 (`DRAFT` / `RECRUITING` / `CLOSED` / `CANCELLED` 등)
 - 마이그레이션 `0003` 에서 `activity_details.image_url` 삭제 (공고 사진 기능 제거)
+- 마이그레이션 `0004` 에서 `organization_keys` 테이블 + `organizations.business_api_key` 추가
 
 </details>
 
@@ -250,7 +260,7 @@ erDiagram
 │  ├─ .env.example           # 설정 견본 (.env 로 복사해서 사용)
 │  └─ Dockerfile
 ├─ backend/                  # FastAPI
-│  ├─ alembic/versions/      # 0001 스키마(.sql 원본) · 0002 수집 테이블 · 0003 사진 컬럼 삭제
+│  ├─ alembic/versions/      # 0001 스키마(.sql 원본) · 0002 수집 테이블 · 0003 사진 컬럼 삭제 · 0004 기관 코드 키
 │  └─ app/
 │     ├─ main.py             # 라우터 등록 (/api/v1)
 │     ├─ routers/            # auth · org · public
@@ -337,6 +347,8 @@ npm run dev     # http://localhost:5173 (VITE_API_MODE 기본값 mock)
 | --- | --- | --- | --- |
 | 청년 | `/login` | `youth@demo.kr` | `demo1234` |
 | 기관 | `/org/login` (Green기관 탭) | `org@demo.kr` | `demo1234` |
+
+기관 회원가입용 데모 **기관 코드 키**: `GS-DEMO-0001` · `GS-DEMO-0002` · `GS-DEMO-0003` (한 키당 한 기관). 실제 키는 운영자가 `organization_keys` 에 직접 넣어 발급합니다.
 
 > 데모 계정은 시연용입니다. `DEMO_MODE=true` 일 때만 시드되며, 실제 운영에서는 `JWT_SECRET`·DB 비밀번호를 반드시 바꿔야 합니다.
 

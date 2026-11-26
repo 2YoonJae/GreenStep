@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex" />
+  <title>ESG 경영 보고서 B안 (Editorial Mono) — 디자인 목업</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700;900&family=Black+Han+Sans&display=swap" />
+  <style>
+    /* 디자인 원본: mokup/ESG경영보고서 B안_Editorial_Mono.pdf — 화면 보기 전용, 인쇄 기능 없음 */
+    :root { --paper: #fafaf7; --ink: #111; --red: #c8331f; --gray: #555; --rule: #cfcfca; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Pretendard', -apple-system, 'Malgun Gothic', sans-serif; background: #d6d4cf; color: var(--ink); word-break: keep-all; -webkit-font-smoothing: antialiased; padding: 20px 12px 40px; }
+    .serif { font-family: 'Noto Serif KR', Georgia, serif; }
+    .display { font-family: 'Black Han Sans', 'Noto Serif KR', sans-serif; font-weight: 400; }
+    .dot { color: var(--red); }
+    .page { width: 1123px; height: 794px; margin: 0 auto; position: relative; overflow: hidden; background: var(--paper); box-shadow: 0 10px 30px rgba(0, 0, 0, .1); padding: 0 56px; }
+    .page + .page { margin-top: 22px; }
+    .runhead { position: absolute; left: 56px; right: 56px; top: 40px; display: flex; justify-content: space-between; font-size: 11.5px; letter-spacing: .06em; padding-bottom: 10px; border-bottom: 2px solid var(--ink); }
+    .runfoot { position: absolute; left: 56px; right: 56px; bottom: 28px; display: flex; justify-content: space-between; font-size: 10.5px; color: var(--gray); }
+
+    /* 1. 표지 */
+    .cover .runhead { border-bottom-width: 3px; }
+    .cover h1 { position: absolute; left: 52px; top: 110px; font-size: 118px; line-height: 1.02; letter-spacing: -.02em; }
+    .cover .vr { position: absolute; left: 744px; top: 122px; bottom: 112px; border-left: 2px solid var(--ink); }
+    .cover .toc { position: absolute; left: 768px; right: 56px; top: 122px; }
+    .cover .toc small { font-size: 11px; font-weight: 800; letter-spacing: .1em; color: var(--red); }
+    .cover .toc ol { list-style: none; margin-top: 12px; border-top: 1px solid var(--rule); }
+    .cover .toc li { display: grid; grid-template-columns: 48px 1fr; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--rule); }
+    .cover .toc li span { font-size: 24px; }
+    .cover .toc li b { font-size: 14px; display: block; }
+    .cover .toc li em { font-style: normal; font-size: 11.5px; color: var(--gray); }
+    .cover .tile { position: absolute; left: 768px; right: 56px; bottom: 112px; background: var(--ink); color: #ddd; padding: 16px 18px; }
+    .cover .tile small { font-size: 11px; }
+    .cover .tile b { display: block; font-size: 46px; color: var(--red); line-height: 1.15; margin-top: 4px; }
+    .cover .tile b span { font-size: 20px; }
+    .cover .sub { position: absolute; left: 56px; top: 588px; font-size: 30px; font-weight: 500; }
+    .cover .desc { position: absolute; left: 56px; top: 642px; width: 560px; font-size: 13.5px; line-height: 1.75; color: #333; }
+    .cover .runfoot { border-top: 2px solid var(--ink); padding-top: 10px; bottom: 40px; }
+
+    /* 2. 인사말 + 하이라이트 */
+    .p2 .col-l { position: absolute; left: 56px; top: 92px; width: 430px; bottom: 60px; }
+    .p2 .col-l small { font-size: 11px; font-weight: 800; letter-spacing: .1em; color: var(--red); }
+    .p2 .col-l h2 { font-size: 31px; line-height: 1.42; margin-top: 14px; font-weight: 700; }
+    .p2 .col-l .body { margin-top: 22px; font-size: 13px; line-height: 1.85; color: #333; }
+    .p2 .col-l .body::first-letter { float: left; font-family: 'Noto Serif KR', serif; font-weight: 900; font-size: 50px; line-height: .9; margin: 6px 10px 0 0; }
+    .p2 .sign { position: absolute; left: 0; bottom: 0; display: flex; align-items: center; gap: 16px; }
+    .p2 .sign i { width: 64px; height: 64px; border-radius: 50%; background: #e3e0da; display: grid; place-items: center; font-style: normal; font-size: 11px; color: var(--gray); }
+    .p2 .sign small { color: var(--gray); font-size: 11.5px; letter-spacing: 0; font-weight: 500; }
+    .p2 .sign b { display: block; font-size: 17px; font-weight: 800; }
+    .p2 .vr { position: absolute; left: 513px; top: 92px; bottom: 60px; border-left: 2px solid var(--ink); }
+    .p2 .col-r { position: absolute; left: 540px; right: 56px; top: 92px; }
+    .p2 .col-r header { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 2px solid var(--ink); padding-bottom: 10px; }
+    .p2 .col-r h2 { font-size: 36px; font-weight: 700; }
+    .p2 .col-r header span { font-size: 11.5px; color: var(--gray); }
+    .row { display: grid; grid-template-columns: 34px 1fr auto; align-items: center; padding: 11px 0; border-bottom: 1px solid var(--rule); }
+    .row:last-child { border-bottom: 2px solid var(--ink); }
+    .row .k { font-size: 13px; font-weight: 800; color: var(--red); }
+    .row .k.g { color: var(--ink); }
+    .row p { font-size: 13.5px; }
+    .row p em { font-style: normal; font-size: 11px; color: var(--gray); }
+    .row b { font-size: 40px; font-weight: 700; letter-spacing: -.01em; }
+    .row b span { font-size: 20px; }
+    .row b.red { color: var(--red); }
+
+    /* 3. 성과 */
+    .p3 h1 { position: absolute; left: 52px; top: 92px; font-size: 64px; line-height: 1.1; }
+    .p3 .lead { position: absolute; left: 520px; top: 104px; width: 470px; font-size: 13px; line-height: 1.75; color: #333; }
+    .p3 .col-l { position: absolute; left: 56px; top: 200px; width: 610px; }
+    .p3 .col-r { position: absolute; left: 700px; right: 56px; top: 200px; }
+    .p3 .vr { position: absolute; left: 683px; top: 200px; bottom: 60px; border-left: 2px solid var(--ink); }
+    .blk { border-top: 2px solid var(--ink); padding-top: 10px; }
+    .blk + .blk { margin-top: 18px; }
+    .blk h3 { font-size: 13.5px; font-weight: 800; display: flex; justify-content: space-between; }
+    .blk h3 span { font-weight: 500; font-size: 11px; color: var(--gray); }
+    .bars { display: grid; grid-template-columns: repeat(11, 1fr); gap: 8px; align-items: end; height: 230px; margin-top: 12px; }
+    .bars div { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; font-size: 10px; }
+    .bars i { display: block; width: 100%; background: #bdbdbd; }
+    .bars i.d { background: #555; }
+    .bars i.k { background: var(--ink); }
+    .bars i.r { background: transparent; border: 1.5px solid var(--red); }
+    .bars span { margin-top: 4px; color: var(--gray); }
+    .bars em { font-style: normal; font-size: 10px; margin-bottom: 3px; }
+    .stack { display: flex; height: 34px; margin-top: 12px; }
+    .stack i { display: flex; align-items: center; padding-left: 8px; font-style: normal; font-size: 11.5px; color: #fff; white-space: nowrap; overflow: hidden; }
+    .cap { font-size: 11px; color: var(--gray); margin-top: 8px; }
+    .road div { display: grid; grid-template-columns: 130px 1fr; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--rule); }
+    .road div:last-child { border-bottom: 2px solid var(--ink); }
+    .road b { font-size: 21px; font-weight: 700; }
+    .road div:first-child b { color: var(--red); }
+    .road span { font-size: 12.5px; line-height: 1.5; }
+    .acts { width: 100%; border-collapse: collapse; font-size: 11.5px; margin-top: 8px; }
+    .acts td { padding: 5px 0; border-bottom: 1px solid var(--rule); }
+    .acts .r { text-align: right; }
+
+    @media print { body { display: none !important; } }
+  </style>
+</head>
+<body>
+  <main id="app"></main>
+  <script src="greenstep-data.js"></script>
+  <script>
+    (function () {
+      var G = window.GreenStepMock, f = G.fmt, r = G.report('o1', 2026);
+      var head = function (sec, no) {
+        return '<div class="runhead"><span>' + sec + '</span><span>' + r.org.name + ' ' + r.year + ' ESG 경영 보고서</span><span>' + no + '</span></div>';
+      };
+      var foot = '<div class="runfoot"><span>* 기관 승인(APPROVED) 기록 기준 · GreenStep SROI 산정 · 집계 ' + r.generatedAt + '</span><span>디자인 목업 · 예시 데이터</span></div>';
+
+      var cover =
+        '<section class="page cover">'
+        + '<div class="runhead"><b>' + r.org.name + '</b><span>VOL. 01 — ' + r.year + '</span><span>ESG MANAGEMENT REPORT</span></div>'
+        + '<h1 class="display">함께한<br/>시간<span class="dot">.</span></h1>'
+        + '<div class="vr"></div>'
+        + '<div class="toc"><small>IN THIS ISSUE</small><ol>'
+        + '<li><span class="serif">01</span><div><b>Greeting</b><em>기관 인사말 · 한 해의 의미</em></div></li>'
+        + '<li><span class="serif">02</span><div><b>Highlights</b><em>' + r.year + ' 사회적 가치 하이라이트</em></div></li>'
+        + '<li><span class="serif">03</span><div><b>Social Value</b><em>월별 · 분야별 · 활동별 성과</em></div></li>'
+        + '<li><span class="serif">04</span><div><b>Next</b><em>내년 계획</em></div></li>'
+        + '</ol></div>'
+        + '<div class="tile"><small>창출 사회적 가치 (' + r.period + ')</small><b class="serif">' + f.man(r.totalValue) + '<span>만원</span></b></div>'
+        + '<p class="sub serif">' + r.year + ' ESG 경영 보고서</p>'
+        + '<p class="desc">청년 ' + r.youthCount + '명이 ' + r.org.name + '과 함께한 ' + f.num(r.totalHours) + '시간을 사회적 가치로 환산해 기관의 ESG 경영 성과로 정리했습니다.</p>'
+        + '<div class="runfoot"><span>GreenStep SROI 산정 · 기관 승인 기록 기준 | 확인번호 ' + r.confirmNo + '</span><span>디자인 목업 · 예시 데이터</span></div>'
+        + '</section>';
+
+      var greet = r.greeting.split('\n');
+      var p2 =
+        '<section class="page p2">' + head('01 — GREETING', '04')
+        + '<div class="col-l"><small>GREETING</small><h2 class="serif">“청년의 시간이<br/>이웃의 내일을<br/>지켰습니다.”</h2>'
+        + '<p class="body">' + greet.join(' ') + '</p>'
+        + '<div class="sign"><i>사진</i><div><small>' + r.orgTypeLabel + '</small><b>' + r.org.name + '장</b></div></div></div>'
+        + '<div class="vr"></div>'
+        + '<div class="col-r"><header><h2 class="serif">' + r.year + ' 하이라이트</h2><span>' + r.period + '</span></header>'
+        + '<div class="row"><span class="k">S</span><p>창출 사회적 가치 <em>· 시간 × 단가 × 가중치</em></p><b class="serif">' + f.man(r.totalValue) + '<span>만원</span></b></div>'
+        + '<div class="row"><span class="k">S</span><p>기관 승인 봉사 시간 <em>· 승인 ' + f.num(r.approvedCount) + '건</em></p><b class="serif">' + f.num(r.totalHours) + '<span>시간</span></b></div>'
+        + '<div class="row"><span class="k g">S</span><p>참여 청년 <em>· 1인당 ' + f.num(r.avgHoursPerYouth) + '시간</em></p><b class="serif">' + r.youthCount + '<span>명</span></b></div>'
+        + '<div class="row"><span class="k g">S</span><p>운영 봉사활동 <em>· 4개 분야</em></p><b class="serif">' + r.activityCount + '<span>개</span></b></div>'
+        + '<div class="row"><span class="k g">G</span><p>가중치 적용 활동 비중 <em>· 직무 난이도 확정</em></p><b class="serif">' + f.pct(r.weightedShare) + '</b></div>'
+        + '<div class="row"><span class="k g">G</span><p>기관 승인률 <em>· 반려 ' + r.rejectedCount + '건</em></p><b class="serif red">' + f.pct(r.approvalRate) + '</b></div>'
+        + '</div>' + foot + '</section>';
+
+      var max = Math.max.apply(null, r.monthly.map(function (m) { return m.value; }));
+      var bars = r.monthly.map(function (m, i) {
+        var h = Math.max(4, (m.value / max) * 190);
+        var cls = i === r.monthly.length - 1 ? 'r' : m.value === max ? 'k' : i >= 5 ? 'd' : '';
+        return '<div><em>' + f.man(m.value) + '</em><i class="' + cls + '" style="height:' + h.toFixed(0) + 'px"></i><span>' + m.month + '월</span></div>';
+      }).join('');
+      var tones = ['#111', '#555', '#c8331f', '#e38a7d'];
+      var stack = r.byCategory.map(function (c, i) {
+        return '<i style="width:' + (c.share * 100).toFixed(1) + '%;background:' + tones[i] + '">' + (c.share > .14 ?c.label + ' ' + f.pct(c.share, 0) : '') + '</i>';
+      }).join('');
+      var cap = r.byCategory.map(function (c) { return c.label + ' ' + f.pct(c.share, 0); }).join(' · ');
+      var rows = r.byActivity.map(function (a) {
+        return '<tr><td>' + a.title + '</td><td class="r">' + a.youth + '명 · ' + f.num(a.hours) + '시간</td><td class="r"><b>' + f.won(a.value) + '원</b></td></tr>';
+      }).join('');
+      var road = r.plan.map(function (p) { return '<div><b class="serif">' + p[0] + '</b><span>' + p[1] + '</span></div>'; }).join('');
+
+      var p3 =
+        '<section class="page p3">' + head('02 — SOCIAL VALUE', '22')
+        + '<h1 class="display">사회적 가치<span class="dot">.</span></h1>'
+        + '<p class="lead">' + r.highlights + '</p>'
+        + '<div class="col-l">'
+        + '<div class="blk"><h3>월별 사회적 가치<span>만원</span></h3><div class="bars">' + bars + '</div><p class="cap">11월은 집계 기준일(' + r.generatedAt + ')까지의 승인분이며, 승인 대기 ' + r.pendingCount + '건은 제외했습니다.</p></div>'
+        + '<div class="blk"><h3>분야별 비중</h3><div class="stack">' + stack + '</div><p class="cap">' + cap + ' (사회적 가치 기준)</p></div>'
+        + '</div>'
+        + '<div class="vr"></div>'
+        + '<div class="col-r">'
+        + '<div class="blk"><h3>활동별 성과</h3><table class="acts"><tbody>' + rows + '</tbody></table></div>'
+        + '<div class="blk road"><h3>내년 계획</h3>' + road + '</div>'
+        + '</div>' + foot + '</section>';
+
+      document.getElementById('app').innerHTML = cover + p2 + p3;
+    })();
+  </script>
+</body>
+</html>

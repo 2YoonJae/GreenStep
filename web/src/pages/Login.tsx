@@ -97,14 +97,8 @@ export default function Login({ type }: { type: 'youth' | 'org' }) {
 
           <p className="mt-6 text-center text-[15px] text-muted">
             아직 회원이 아니신가요?{' '}
-            <Link className="font-bold text-hover hover:underline" to={org ? '/signup?type=org' : '/signup'}>
+            <Link className="font-bold text-hover hover:underline" to={org ? '/org/signup' : '/signup'}>
               {org ? '기관 회원가입' : '회원가입'}
-            </Link>
-          </p>
-          <p className="mt-2 text-center text-[14px] text-muted">
-            {org ? '청년 회원이신가요? ' : '기관 담당자이신가요? '}
-            <Link className="text-hover hover:underline" to={org ? '/login' : '/org/login'}>
-              {org ? 'Green청년 로그인 →' : 'Green기관 로그인 →'}
             </Link>
           </p>
         </div>

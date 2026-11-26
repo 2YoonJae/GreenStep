@@ -50,7 +50,10 @@ export interface YouthSignupInput {
   profile: UserProfileInput;
 }
 
-/** 기관 가입 → organizations(심사 대기) + organization_profiles + 담당자 users + org_members(OWNER) */
+/**
+ * 기관 가입 → organizations(심사 대기) + organization_profiles(빈 소개) + 담당자 users + org_members(OWNER).
+ * GreenStep 이 발급한 미사용 기관 코드 키(organization_keys)가 있어야 가입됩니다.
+ */
 export interface OrgSignupInput {
   /** organizations (organization_id · verification_status · created_at 은 서버가 정함) */
   organization: {
@@ -59,9 +62,8 @@ export interface OrgSignupInput {
     address: string;
     contactEmail: string;
     businessNo: string;
+    businessApiKey: string; // 기관 코드 키 (organizations.business_api_key)
   };
-  /** organization_profiles */
-  profile: { intro: string };
   /** 담당자 계정 → users, org_members(role=OWNER, membership_status=ACTIVE) */
   manager: { name: string; email: string; password: string };
 }

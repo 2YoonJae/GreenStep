@@ -100,7 +100,7 @@ export function portalOfPath(pathname: string, search: string): Portal | null {
   const type = new URLSearchParams(search).get('type');
   if (pathname.startsWith('/org')) return 'ORG';
   if ((pathname === '/login' || pathname === '/signup') && type === 'org') return 'ORG';
-  // /org/login 도 '/org'로 시작하므로 ORG
+  // /org/login · /org/signup 도 '/org'로 시작하므로 ORG (위 줄은 옛 주소 ?type=org 용)
   if (pathname === '/' || pathname.startsWith('/activities') || pathname.startsWith('/me') || pathname === '/login' || pathname === '/signup') return 'YOUTH';
   return null;
 }

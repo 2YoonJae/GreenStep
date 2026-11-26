@@ -45,8 +45,19 @@ class Organization(Base):
     contact_email: Mapped[str] = mapped_column(String(255))
     created_at: Mapped[datetime] = _now()
     business_no: Mapped[str] = mapped_column(String(10), unique=True)
+    business_api_key: Mapped[str | None] = mapped_column(String(20), unique=True)  # 가입에 쓴 기관 코드 키 (0004)
 
     profile: Mapped["OrganizationProfile | None"] = relationship(back_populates="organization", uselist=False, lazy="joined")
+
+
+class OrganizationKey(Base):
+    """GreenStep 이 발급한 기관 코드 키 (0004). 미사용 키만 가입에 쓸 수 있고, 한 키는 한 기관만"""
+
+    __tablename__ = "organization_keys"
+    key_code: Mapped[str] = mapped_column(String(20), primary_key=True)
+    organization_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("organizations.organization_id"), unique=True)
+    issued_at: Mapped[datetime] = _now()
+    used_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
 
 
 class OrgMember(Base):

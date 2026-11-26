@@ -40,7 +40,8 @@ export default function App() {
         <Route path="/verify" element={<Verify />} />
         <Route path="/login" element={<Login type="youth" />} />
         <Route path="/org/login" element={<Login type="org" />} />
-        <Route path="/signup" element={<Signup />} />
+        <Route path="/signup" element={<Signup type="youth" />} />
+        <Route path="/org/signup" element={<Signup type="org" />} />
         {/* 청년 전용 */}
         <Route path="/me" element={<MyPage />} />
         <Route path="/me/records" element={<Records />} />

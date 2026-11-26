@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, Navigate, useLocation } from 'react-router-dom';
 import { ORG_TYPE_LABEL, type Role } from '../data/types';
 import { bizNo } from '../lib/format';
 import { useAuth } from '../lib/auth';
@@ -28,6 +28,8 @@ export function RequireRole({ role, children }: { role: Role; children: ReactNod
   const label = role === 'YOUTH' ? '청년 회원' : '기관 회원';
 
   if (!ready) return <p className="py-16 text-center text-muted">불러오는 중…</p>;
+  // 기관 화면은 청년 포털과 완전히 분리 — 로그인 전에는 기관 로그인 페이지로 바로 보냄
+  if (!session && role === 'ORG') return <Navigate to={`/org/login?next=${next}`} replace />;
   if (!session)
     return (
       <Notice title={`${label} 전용 화면입니다`}>
@@ -36,7 +38,7 @@ export function RequireRole({ role, children }: { role: Role; children: ReactNod
           <Link className="button primary" to={`${role === 'ORG' ? '/org/login' : '/login'}?next=${next}`}>
             {role === 'ORG' ? '기관 로그인' : '로그인'}
           </Link>
-          <Link className="button" to={`/signup${role === 'ORG' ? '?type=org' : ''}`}>
+          <Link className="button" to={role === 'ORG' ? '/org/signup' : '/signup'}>
             회원가입
           </Link>
         </div>

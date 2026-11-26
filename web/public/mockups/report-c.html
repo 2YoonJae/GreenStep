@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex" />
+  <title>ESG 경영 보고서 C안 (Swiss Grid) — 디자인 목업</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@600;700&display=swap" />
+  <style>
+    /* 디자인 원본: mokup/ESG경영보고서 C안_Swiss_Grid.pdf — 화면 보기 전용, 인쇄 기능 없음 */
+    :root { --blue: #1546ff; --ink: #000; --line: 1.5px solid #000; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Pretendard', -apple-system, 'Malgun Gothic', sans-serif; background: #d4d7dd; color: var(--ink); word-break: keep-all; -webkit-font-smoothing: antialiased; padding: 20px 12px 40px; }
+    .xl { font-family: 'Archivo Black', 'Pretendard', sans-serif; font-weight: 400; letter-spacing: -.02em; }
+    .in { font-family: 'Inter', 'Pretendard', sans-serif; font-weight: 700; }
+    .page { width: 1123px; height: 794px; margin: 0 auto; position: relative; overflow: hidden; background: #fff; box-shadow: 0 10px 30px rgba(0, 0, 0, .12); display: grid; }
+    .page + .page { margin-top: 22px; }
+    .cell { border-right: var(--line); border-bottom: var(--line); padding: 20px 22px; position: relative; display: flex; flex-direction: column; }
+    .cell.nr { border-right: 0; }
+    .cell.nb { border-bottom: 0; }
+    .blue { background: var(--blue); color: #fff; }
+    .black { background: #000; color: #fff; }
+    .lbl { font-size: 11.5px; font-weight: 700; }
+    .big { font-size: 52px; line-height: 1; margin-top: auto; }
+    .big span { font-family: 'Pretendard', sans-serif; font-weight: 900; font-size: 22px; margin-left: 2px; }
+    .sub { font-size: 11px; margin-top: 10px; opacity: .85; }
+    .sample { position: absolute; right: 12px; bottom: 8px; font-size: 10px; color: #888; z-index: 3; }
+
+    /* 1. 표지 */
+    .cover { grid-template-columns: 280px 280px 281px 282px; grid-template-rows: 104px 1fr 140px; }
+    .cover .year { font-size: 252px; line-height: .8; color: var(--blue); margin-top: 18px; margin-left: -6px; }
+    .cover h1 { font-size: 56px; font-weight: 900; letter-spacing: -.03em; margin-top: auto; }
+    .cover .desc { font-size: 13px; line-height: 1.7; margin-top: 10px; width: 520px; }
+    .cover .num { font-size: 40px; }
+    .cover .sec b { font-size: 34px; }
+    .cover .sec p { margin-top: auto; font-size: 13.5px; font-weight: 800; }
+
+    /* 2. 인사말 + 하이라이트 */
+    .p2 { grid-template-columns: 560px 281px 282px; grid-template-rows: 56px 1fr 1fr 1fr; }
+    .p2 .top { grid-column: 1 / -1; flex-direction: row; justify-content: space-between; align-items: center; padding: 0 28px; font-size: 12px; }
+    .p2 .msg { grid-row: 2 / 5; padding: 28px; }
+    .p2 .msg small { color: var(--blue); font-size: 12.5px; font-weight: 800; }
+    .p2 .msg h2 { font-size: 31px; line-height: 1.32; font-weight: 900; letter-spacing: -.03em; margin-top: 12px; }
+    .p2 .msg .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-top: 20px; font-size: 12.5px; line-height: 1.75; }
+    .p2 .msg .sign { margin-top: auto; display: flex; align-items: flex-end; gap: 16px; }
+    .p2 .msg .sign i { width: 124px; height: 150px; background: #ececec; display: grid; place-items: center; font-style: normal; font-size: 11px; color: #777; }
+    .p2 .msg .sign small { display: block; color: #666; font-size: 12px; font-weight: 500; }
+    .p2 .msg .sign b { font-size: 18px; font-weight: 900; }
+    .p2 .big { font-size: 46px; }
+
+    /* 3. 성과 */
+    .p3 { grid-template-columns: 280px 280px 281px 282px; grid-template-rows: 56px 150px 1fr 150px; }
+    .p3 .top { grid-column: 1 / -1; flex-direction: row; justify-content: space-between; align-items: center; padding: 0 28px; font-size: 12px; }
+    .p3 h1 { font-size: 46px; line-height: 1.08; font-weight: 900; letter-spacing: -.03em; }
+    .p3 .lead { font-size: 13px; line-height: 1.7; margin-top: auto; }
+    .chart { display: grid; grid-template-columns: repeat(11, 1fr); gap: 10px; align-items: end; flex: 1; margin-top: 16px; border-bottom: 2px solid #000; }
+    .chart div { display: flex; flex-direction: column; justify-content: flex-end; height: 100%; }
+    .chart em { font-style: normal; font-size: 11px; margin-bottom: 4px; }
+    .chart i { display: block; background: #000; }
+    .chart i.b { background: var(--blue); }
+    .chart i.o { background: transparent; border: 2px dashed var(--blue); }
+    .xaxis { display: grid; grid-template-columns: repeat(11, 1fr); gap: 10px; font-size: 11px; margin-top: 6px; }
+    .list div { display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1.5px solid #000; font-size: 12px; }
+    .list div:last-child { border-bottom: 0; }
+    .list b { font-family: 'Inter', sans-serif; }
+    .road b { font-size: 30px; }
+    .road p { margin-top: auto; font-size: 12.5px; line-height: 1.5; }
+
+    @media print { body { display: none !important; } }
+  </style>
+</head>
+<body>
+  <main id="app"></main>
+  <script src="greenstep-data.js"></script>
+  <script>
+    (function () {
+      var G = window.GreenStepMock, f = G.fmt, r = G.report('o1', 2026);
+
+      var cover =
+        '<section class="page cover">'
+        + '<div class="cell" style="grid-column:1/3"><b style="font-size:22px;font-weight:900">' + r.org.name + '</b></div>'
+        + '<div class="cell lbl in">ESG Management<br/>Report</div>'
+        + '<div class="cell nr lbl in">GreenStep SROI<br/>기관 승인 기록 기준</div>'
+        + '<div class="cell" style="grid-column:1/4;grid-row:2/3"><span class="year xl">' + r.year + '</span><h1>ESG 경영 보고서</h1>'
+        + '<p class="desc">청년 봉사자와 함께한 시간을 사회적 가치로 환산해, 지역과 함께한 한 해의 ESG 경영 성과로 정리했습니다.</p></div>'
+        + '<div class="nr" style="grid-column:4;grid-row:2/3;display:grid;grid-template-rows:1fr 1fr;border-bottom:1.5px solid #000">'
+        + '<div class="cell nr blue"><span class="lbl in">Social Value</span><b class="big xl">' + f.man(r.totalValue) + '<span>만원</span></b></div>'
+        + '<div class="cell nr nb"><span class="lbl in">Volunteer Hours</span><b class="big xl">' + f.num(r.totalHours) + '<span>시간</span></b></div></div>'
+        + '<div class="cell nb sec"><b class="xl">01</b><p>Greeting</p></div>'
+        + '<div class="cell nb sec"><b class="xl">02</b><p>Highlights</p></div>'
+        + '<div class="cell nb sec"><b class="xl">03</b><p>Social Value</p></div>'
+        + '<div class="cell nb nr sec"><b class="xl">04</b><p>Next</p></div>'
+        + '<span class="sample">디자인 목업 · 예시 데이터</span>'
+        + '</section>';
+
+      var greet = r.greeting.split('\n');
+      var tile = function (cls, label, value, unit, sub) {
+        return '<div class="cell ' + cls + '"><span class="lbl">' + label + '</span><b class="big xl">' + value + (unit ? '<span>' + unit + '</span>' : '') + '</b><p class="sub">' + sub + '</p></div>';
+      };
+      var p2 =
+        '<section class="page p2">'
+        + '<div class="cell nr top in"><span>01 Greeting</span><span>' + r.org.name + ' ESG Management Report ' + r.year + '</span><span>04</span></div>'
+        + '<div class="cell nb msg"><small class="in">GREETING</small><h2>청년의 시간이 이웃의 내일을 지켰습니다.</h2>'
+        + '<div class="cols"><p>' + greet[1] + '</p><p>' + greet[2] + '</p></div>'
+        + '<div class="sign"><i>[기관장 사진]</i><div><small>' + r.orgTypeLabel + '</small><b>' + r.org.name + '장</b></div></div></div>'
+        + tile('blue', 'S · 창출 사회적 가치', f.man(r.totalValue), '만원', f.won(r.totalValue) + '원 · ' + r.period)
+        + tile('nr', 'S · 기관 승인 봉사 시간', f.num(r.totalHours), '시간', '승인 기록 ' + f.num(r.approvedCount) + '건')
+        + tile('', 'S · 참여 청년', r.youthCount, '명', '1인당 평균 ' + f.num(r.avgHoursPerYouth) + '시간')
+        + tile('nr', 'S · 운영 봉사활동', r.activityCount, '개', '돌봄·보건·교육·환경')
+        + tile('nb', 'G · 가중치 적용 활동 비중', f.pct(r.weightedShare), '', '직무 난이도 확정 활동 · 시간 기준')
+        + tile('nb nr black', 'G · 기관 승인률', f.pct(r.approvalRate), '', '승인 ' + r.approvedCount + ' · 반려 ' + r.rejectedCount + ' · 대기 ' + r.pendingCount + ' 제외')
+        + '<span class="sample">디자인 목업 · 예시 데이터</span>'
+        + '</section>';
+
+      var max = Math.max.apply(null, r.monthly.map(function (m) { return m.value; }));
+      var chart = r.monthly.map(function (m, i) {
+        var h = Math.max(4, (m.value / max) * 210);
+        var cls = i === r.monthly.length - 1 ? 'o' : m.value === max ? 'b' : '';
+        return '<div><em class="in"' + (cls ? ' style="color:#1546ff"' : '') + '>' + f.man(m.value) + '</em><i class="' + cls + '" style="height:' + h.toFixed(0) + 'px"></i></div>';
+      }).join('');
+      var axis = r.monthly.map(function (m) { return '<span class="in">' + m.month + '월</span>'; }).join('');
+      var cats = r.byCategory.map(function (c) { return '<div><span>' + c.label + '</span><b>' + f.pct(c.share, 0) + '</b></div>'; }).join('');
+      var acts = r.byActivity.slice(0, 4).map(function (a) { return '<div><span>' + a.title + '</span><b>' + f.man(a.value) + '만</b></div>'; }).join('');
+      var road = r.plan.map(function (p, i) {
+        var last = i === r.plan.length - 1;
+        return '<div class="cell nb' + (last ? ' nr blue' : '') + ' road"><b>' + p[0] + '</b><p>' + p[1] + '</p></div>';
+      }).join('');
+
+      var p3 =
+        '<section class="page p3">'
+        + '<div class="cell nr top in"><span>03 Social Value</span><span>SROI · 시간 × 단가 × 가중치</span><span>22</span></div>'
+        + '<div class="cell" style="grid-column:1/3"><h1>사회적 가치<br/>성과</h1></div>'
+        + '<div class="cell nr" style="grid-column:3/5"><p class="lead">' + r.highlights + '</p></div>'
+        + '<div class="cell" style="grid-column:1/4"><div style="display:flex;justify-content:space-between"><b class="lbl">월별 사회적 가치</b><span class="lbl" style="font-weight:500">만원 · ' + r.period + '</span></div>'
+        + '<div class="chart">' + chart + '</div><div class="xaxis">' + axis + '</div></div>'
+        + '<div class="cell nr"><b class="lbl">분야별 비중</b><div class="list" style="margin-top:8px">' + cats + '</div>'
+        + '<b class="lbl" style="margin-top:18px">활동별 상위</b><div class="list" style="margin-top:8px">' + acts + '</div>'
+        + '<p class="sub" style="margin-top:auto;opacity:.7">확인번호 ' + r.confirmNo + '<br/>GreenStep /verify 에서 진위 확인</p></div>'
+        + road
+        + '<span class="sample">디자인 목업 · 예시 데이터</span>'
+        + '</section>';
+
+      document.getElementById('app').innerHTML = cover + p2 + p3;
+    })();
+  </script>
+</body>
+</html>

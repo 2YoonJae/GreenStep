@@ -2,7 +2,7 @@
  * 목업 DB — 백엔드(PostgreSQL)를 만들지 않는 동안 브라우저 localStorage 에 테이블을 흉내 냅니다.
  * 이 파일은 src/api/mock 안에서만 import 합니다. 화면 코드에서 직접 사용하지 마세요.
  */
-import type { Activity, Application, CsrReport, Faq, Notice, OrgMember, Organization, Participation, ResumeDoc, Role, User } from '../../data/types';
+import type { Activity, Application, CsrReport, Faq, Notice, OrgKey, OrgMember, Organization, Participation, ResumeDoc, Role, User } from '../../data/types';
 import * as seed from '../../data/seed';
 
 // v4: 명칭 변경(봉사 이력서 · ESG 경영 보고서)·채용/사진 제거 반영 — 이전 저장분은 새로 생성
@@ -20,6 +20,8 @@ export interface MockDb {
   users: User[];
   organizations: Organization[];
   org_members: OrgMember[];
+  /** organization_keys — 발급한 기관 코드 키. 예전 저장분에는 없을 수 있음 */
+  org_keys?: OrgKey[];
   credentials: Credential[];
   activities: Activity[];
   applications: Application[];
@@ -49,6 +51,7 @@ async function createSeedDb(): Promise<MockDb> {
     users: clone(seed.seedUsers),
     organizations: clone(seed.seedOrgs),
     org_members: clone(seed.seedMembers),
+    org_keys: clone(seed.seedOrgKeys),
     credentials: [
       ...seed.seedUsers.map((u) => ({ subjectType: 'YOUTH' as const, subjectId: u.id, email: u.email, passwordHash: hash })),
       ...seed.seedMembers.map((m) => ({ subjectType: 'ORG' as const, subjectId: m.id, email: m.email, passwordHash: hash })),

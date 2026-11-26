@@ -124,7 +124,7 @@ function Guide() {
           </ul>
           <div className="mt-5 flex gap-2">
             <Link className="button primary small" to="/signup">청년 회원가입</Link>
-            <Link className="button small" to="/signup?type=org">기관 회원가입</Link>
+            <Link className="button small" to="/org/signup">기관 회원가입</Link>
           </div>
         </div>
       </div>

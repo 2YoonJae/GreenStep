@@ -2,7 +2,7 @@ import { useEffect, useRef, type ReactNode } from 'react';
 import { Icon } from './Icon';
 
 /** 원본 시안의 <dialog> 스타일을 그대로 쓰는 모달 */
-export function Dialog({ open, title, onClose, children, actions }: { open: boolean; title: string; onClose: () => void; children: ReactNode; actions?: ReactNode }) {
+export function Dialog({ open, title, onClose, children, actions, className }: { open: boolean; title: string; onClose: () => void; children: ReactNode; actions?: ReactNode; className?: string }) {
   const ref = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
@@ -15,6 +15,7 @@ export function Dialog({ open, title, onClose, children, actions }: { open: bool
   return (
     <dialog
       ref={ref}
+      className={className}
       aria-label={title}
       onClose={onClose}
       onClick={(e) => {

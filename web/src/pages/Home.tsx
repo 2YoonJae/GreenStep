@@ -4,6 +4,7 @@ import { api } from '../api';
 import type { ActivityQuery, Category, Region } from '../data/types';
 import { Icon } from '../components/Icon';
 import { HeroBanner } from '../components/HeroBanner';
+import { DocMockupDialog, type MockupKind } from '../components/DocMockupDialog';
 import { ActivityCard, Calculator, Empty, ErrorBox, Loading } from '../components/ui';
 import { useAsync } from '../lib/useAsync';
 import { useSaved } from '../lib/saved';
@@ -22,6 +23,7 @@ export default function Home() {
   const [category, setCategory] = useState<Category | ''>('');
   const [keyword, setKeyword] = useState('');
   const [filter, setFilter] = useState<Filter>('all');
+  const [mockup, setMockup] = useState<MockupKind | null>(null);
 
   const query: ActivityQuery =
     filter === 'all' ? { sort: 'recommended', pageSize: 6 } : filter === 'closing' ? { sort: 'deadline', closingWithinDays: 7, pageSize: 6 } : { category: filter, sort: 'recommended', pageSize: 6 };
@@ -212,30 +214,32 @@ export default function Home() {
           </h2>
           <p>GreenStep은 활동 시간과 분야별 단가, 가중치를 바탕으로 사회적 가치를 추정합니다. 같은 기록이 청년의 이력이 되고, 기관의 성과가 됩니다.</p>
           <div className="document-links">
-            <Link className="document-link" to="/me/resume">
+            {/* 누르면 디자인 목업 보기 창 (보기 전용) */}
+            <button type="button" className="document-link" onClick={() => setMockup('resume')} aria-haspopup="dialog">
               <span className="document-icon">
                 <Icon name="file" />
               </span>
               <span>
                 <strong>청년을 위한 봉사 이력서</strong>
-                <small>승인된 활동 시간과 사회적 가치를 한눈에</small>
+                <small>승인된 활동 시간과 사회적 가치를 한눈에 · 견본 보기</small>
               </span>
               <Icon name="arrow" />
-            </Link>
-            <Link className="document-link" to="/org/reports">
+            </button>
+            <button type="button" className="document-link" onClick={() => setMockup('report')} aria-haspopup="dialog">
               <span className="document-icon">
                 <Icon name="chart" />
               </span>
               <span>
                 <strong>기관을 위한 ESG 경영 보고서</strong>
-                <small>활동 성과를 모아 CSV·PDF로 제공</small>
+                <small>활동 성과를 모은 보고서 · A·B·C안 견본 보기</small>
               </span>
               <Icon name="arrow" />
-            </Link>
+            </button>
           </div>
         </div>
         <Calculator />
       </section>
+      <DocMockupDialog kind={mockup} onClose={() => setMockup(null)} />
 
       <section className="container impact" aria-labelledby="impact-title">
         <div className="impact-heading">

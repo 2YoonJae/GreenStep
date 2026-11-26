@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex" />
+  <title>ESG 경영 보고서 A안 (Ocean Corporate) — 디자인 목업</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&display=swap" />
+  <style>
+    /* 디자인 원본: mokup/ESG경영보고서 A안_Ocean_Corporate.pdf — 화면 보기 전용, 인쇄 기능 없음 */
+    :root { --navy: #0b2a5b; --sky: #42a8f5; --blue: #1f80d6; --ice: #e8f2fc; --bg: #f3f7fb; --mute: #8fa6c8; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Pretendard', -apple-system, 'Malgun Gothic', sans-serif; background: #d9dee5; color: var(--navy); word-break: keep-all; -webkit-font-smoothing: antialiased; padding: 20px 12px 40px; }
+    .en { font-family: 'Montserrat', 'Pretendard', sans-serif; }
+    .page { width: 1123px; height: 794px; margin: 0 auto; position: relative; overflow: hidden; background: #fff; box-shadow: 0 10px 30px rgba(11, 42, 91, .12); }
+    .page + .page { margin-top: 22px; }
+    .sample { position: absolute; z-index: 5; right: 24px; bottom: 12px; font-size: 10px; color: var(--mute); }
+
+    /* 1. 표지 */
+    .cover .stripes { position: absolute; inset: 0; }
+    .cover .brand { position: absolute; left: 56px; top: 50px; display: flex; align-items: center; gap: 12px; font-size: 17px; font-weight: 800; }
+    .cover .brand i { width: 22px; height: 22px; background: var(--navy); transform: skewX(-18deg); display: block; }
+    .cover .std { position: absolute; right: 56px; top: 50px; text-align: right; color: #dce8f7; font-size: 12px; line-height: 1.7; }
+    .cover .eyebrow { position: absolute; left: 56px; top: 222px; font-size: 13px; font-weight: 800; letter-spacing: .2em; color: var(--blue); }
+    .cover h1 { position: absolute; left: 52px; top: 255px; font-size: 68px; line-height: 1.12; font-weight: 900; letter-spacing: -.03em; }
+    .cover .sub { position: absolute; left: 56px; top: 420px; font-size: 21px; font-weight: 800; }
+    .cover .desc { position: absolute; left: 56px; top: 466px; width: 360px; font-size: 13.5px; line-height: 1.75; color: #3c5378; }
+    .cover .kpi { position: absolute; right: 56px; text-align: right; color: #fff; }
+    .cover .kpi small { display: block; font-size: 11.5px; color: #cfe0f5; }
+    .cover .kpi b { font-size: 40px; font-weight: 800; letter-spacing: -.02em; line-height: 1.15; }
+    .cover .kpi b span { font-size: 18px; margin-left: 2px; }
+    .cover .nav { position: absolute; left: 56px; bottom: 50px; display: flex; gap: 22px; font-size: 11.5px; font-weight: 800; letter-spacing: .12em; }
+
+    /* 2. 인사말 + 하이라이트 */
+    .p2 { background: var(--bg); }
+    .p2 .band { position: absolute; left: 0; right: 0; top: 0; height: 215px; background: var(--navy); clip-path: polygon(0 0, 100% 0, 100% 75%, 0 100%); }
+    .p2 .msg-l { position: absolute; left: 48px; top: 36px; width: 470px; color: #fff; }
+    .p2 .msg-l small { font-size: 11.5px; font-weight: 800; letter-spacing: .2em; color: var(--sky); }
+    .p2 .msg-l h2 { font-size: 27px; line-height: 1.38; margin-top: 10px; font-weight: 800; letter-spacing: -.02em; }
+    .p2 .msg-r { position: absolute; left: 580px; right: 48px; top: 56px; color: #dce8f7; font-size: 12.5px; line-height: 1.8; white-space: pre-line; }
+    .p2 .msg-r b { color: #fff; }
+    .p2 .h-title { position: absolute; left: 48px; top: 222px; font-size: 30px; font-weight: 800; letter-spacing: -.02em; }
+    .p2 .h-meta { position: absolute; right: 48px; top: 236px; font-size: 11.5px; color: #3c5378; }
+    .cards { position: absolute; left: 48px; right: 48px; top: 276px; bottom: 36px; display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: 1fr 1fr; gap: 14px; }
+    .card { background: #fff; border-radius: 4px; border-top: 4px solid var(--sky); padding: 18px 20px; display: flex; flex-direction: column; }
+    .card.dk { border-top-color: var(--navy); }
+    .card.md { border-top-color: var(--mute); }
+    .card small { font-size: 10.5px; font-weight: 800; letter-spacing: .06em; color: var(--blue); }
+    .card.dk small, .card.md small { color: var(--navy); }
+    .card p { font-size: 13px; margin-top: 4px; }
+    .card b { font-size: 46px; font-weight: 800; letter-spacing: -.03em; margin-top: 8px; line-height: 1; }
+    .card b span { font-size: 18px; margin-left: 2px; font-family: 'Pretendard', sans-serif; }
+    .card em { margin-top: auto; font-style: normal; font-size: 11px; color: #3c5378; }
+    .card.hl { background: var(--sky); border: 0; clip-path: polygon(0 0, 100% 0, 100% 100%, 9% 100%); }
+    .card.hl small, .card.hl p, .card.hl em { color: var(--navy); }
+    .card.hl em { padding-left: 24px; }
+
+    /* 3. 성과 */
+    .p3 { background: var(--bg); }
+    .p3 .side { position: absolute; left: 0; top: 0; bottom: 0; width: 300px; background: var(--navy); clip-path: polygon(0 0, 100% 0, 82% 100%, 0 100%); color: #fff; padding: 44px 34px; }
+    .p3 .side small { font-size: 11.5px; font-weight: 800; letter-spacing: .2em; color: var(--sky); }
+    .p3 .side h2 { font-size: 34px; line-height: 1.25; margin-top: 12px; font-weight: 800; letter-spacing: -.02em; }
+    .p3 .side .lead { font-size: 12.5px; line-height: 1.75; color: #dce8f7; margin-top: 16px; width: 205px; }
+    .p3 .side dl { margin-top: 26px; width: 200px; }
+    .p3 .side dl div { border-top: 1px solid rgba(255, 255, 255, .25); padding: 10px 0; }
+    .p3 .side dt { font-size: 12.5px; font-weight: 800; }
+    .p3 .side dd { font-size: 11px; color: #dce8f7; margin-top: 2px; line-height: 1.5; }
+    .p3 .top { position: absolute; left: 320px; right: 48px; top: 36px; display: flex; justify-content: space-between; font-size: 11.5px; color: #3c5378; border-bottom: 1px solid #c9d8ea; padding-bottom: 10px; }
+    .box { position: absolute; background: #fff; border-radius: 4px; padding: 18px 22px; }
+    .box h3 { font-size: 14.5px; font-weight: 800; display: flex; justify-content: space-between; align-items: baseline; }
+    .box h3 span { font-size: 11px; font-weight: 500; color: #3c5378; }
+    .hbar { display: grid; grid-template-columns: 52px 1fr 92px; align-items: center; gap: 10px; margin-top: 7px; font-size: 11.5px; }
+    .hbar i { display: block; height: 15px; clip-path: polygon(0 0, 100% 0, calc(100% - 9px) 100%, 0 100%); }
+    .hbar b { text-align: right; font-weight: 800; }
+    .stack { display: flex; height: 26px; margin-top: 12px; }
+    .legend { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 16px; margin-top: 12px; font-size: 11.5px; }
+    .legend b { font-weight: 800; }
+    .road div { display: grid; grid-template-columns: 96px 1fr; gap: 10px; align-items: baseline; margin-top: 11px; font-size: 12px; }
+    .road b { font-size: 15px; font-weight: 800; }
+    .road div:last-child b { color: var(--blue); }
+    .acts { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 11.5px; }
+    .acts th { text-align: left; font-weight: 700; color: #3c5378; border-bottom: 1px solid #c9d8ea; padding: 5px 4px; }
+    .acts td { border-bottom: 1px solid #eef3f9; padding: 5px 4px; }
+    .acts .r { text-align: right; }
+    .p3 .note { position: absolute; left: 320px; bottom: 22px; font-size: 10.5px; color: #3c5378; }
+
+    @media print { body { display: none !important; } }
+  </style>
+</head>
+<body>
+  <main id="app"></main>
+  <script src="greenstep-data.js"></script>
+  <script>
+    (function () {
+      var G = window.GreenStepMock, f = G.fmt, r = G.report('o1', 2026);
+      var shades = ['#0b2a5b', '#1f80d6', '#42a8f5', '#a6d3fa', '#c9d8ea'];
+      var maxMonth = Math.max.apply(null, r.monthly.map(function (m) { return m.value; }));
+      var peak = r.monthly.reduce(function (a, b) { return b.value > a.value ? b : a; });
+
+      var cover =
+        '<section class="page cover">'
+        + '<svg class="stripes" viewBox="0 0 1123 794" preserveAspectRatio="none" aria-hidden="true">'
+        + '<polygon points="585,0 1123,0 1123,794 338,794" fill="#0b2a5b"/>'
+        + '<polygon points="718,0 852,0 608,794 474,794" fill="#42a8f5"/>'
+        + '<polygon points="900,0 942,0 698,794 656,794" fill="#e8f2fc"/></svg>'
+        + '<div class="brand"><i></i>' + r.org.name + '</div>'
+        + '<div class="std">GreenStep SROI 산정<br/>기관 승인 기록 기준</div>'
+        + '<p class="eyebrow en">ESG MANAGEMENT REPORT ' + r.year + '</p>'
+        + '<h1>청년과 함께<br/>잇는 내일</h1>'
+        + '<p class="sub">' + r.year + ' ' + r.org.name + ' ESG 경영 보고서</p>'
+        + '<p class="desc">청년 봉사자와 함께한 시간을 사회적 가치로 환산해, 지역과 함께한 한 해의 ESG 경영 성과로 정리했습니다.</p>'
+        + '<div class="kpi" style="top:500px"><small>창출 사회적 가치</small><b class="en">' + f.man(r.totalValue) + '<span>만원</span></b></div>'
+        + '<div class="kpi" style="top:580px"><small>기관 승인 봉사 시간</small><b class="en">' + f.num(r.totalHours) + '<span>시간</span></b></div>'
+        + '<div class="kpi" style="top:660px"><small>참여 청년</small><b class="en">' + r.youthCount + '<span>명</span></b></div>'
+        + '<nav class="nav en"><span>GREETING</span><span>HIGHLIGHTS</span><span>VALUE</span></nav>'
+        + '<span class="sample" style="color:#8fa6c8">디자인 목업 · 예시 데이터</span>'
+        + '</section>';
+
+      var greet = r.greeting.split('\n');
+      var p2 =
+        '<section class="page p2">'
+        + '<div class="band"></div>'
+        + '<div class="msg-l"><small class="en">GREETING</small><h2>“청년의 시간이 이웃의<br/>내일을 지켰습니다.”</h2></div>'
+        + '<p class="msg-r">' + greet.slice(1).join(' ') + ' — <b>' + r.org.name + '장</b></p>'
+        + '<h2 class="h-title en">' + r.year + ' ESG Highlights</h2>'
+        + '<p class="h-meta">' + r.org.name + ' ' + r.year + ' ESG 경영 보고서 · 02</p>'
+        + '<div class="cards">'
+        + '<div class="card"><small class="en">SOCIAL VALUE</small><p>창출 사회적 가치</p><b class="en">' + f.man(r.totalValue) + '<span>만원</span></b><em>' + f.won(r.totalValue) + '원 · 시간 × 단가 × 가중치</em></div>'
+        + '<div class="card"><small class="en">VOLUNTEER HOURS</small><p>기관 승인 봉사 시간</p><b class="en">' + f.num(r.totalHours) + '<span>시간</span></b><em>승인 기록 ' + f.num(r.approvedCount) + '건 · ' + r.period + '</em></div>'
+        + '<div class="card dk"><small class="en">YOUTH</small><p>참여 청년</p><b class="en">' + r.youthCount + '<span>명</span></b><em>1인당 평균 ' + f.num(r.avgHoursPerYouth) + '시간</em></div>'
+        + '<div class="card dk"><small class="en">PROGRAMS</small><p>운영 봉사활동</p><b class="en">' + r.activityCount + '<span>개</span></b><em>돌봄·보건·교육·환경 4개 분야</em></div>'
+        + '<div class="card md"><small class="en">DIFFICULTY</small><p>가중치 적용 활동 비중</p><b class="en">' + f.pct(r.weightedShare) + '</b><em>직무 난이도(+0.2) 운영자 확정 활동 · 시간 기준</em></div>'
+        + '<div class="card hl"><small class="en">VERIFICATION</small><p>기관 승인률</p><b class="en">' + f.pct(r.approvalRate) + '</b><em>승인 ' + r.approvedCount + '건 · 반려 ' + r.rejectedCount + '건 · 대기 ' + r.pendingCount + '건 제외</em></div>'
+        + '</div>'
+        + '<span class="sample">디자인 목업 · 예시 데이터</span>'
+        + '</section>';
+
+      var bars = r.monthly.map(function (m) {
+        var w = (m.value / maxMonth) * 100;
+        var c = m.month === peak.month ? '#0b2a5b' : m.month >= 9 ? '#8fa6c8' : '#c9d8ea';
+        return '<div class="hbar"><span>' + m.month + '월</span><i style="width:' + w.toFixed(1) + '%;background:' + c + '"></i><b class="en">' + f.man(m.value) + '만원</b></div>';
+      }).join('');
+      var stack = r.byCategory.map(function (c, i) { return '<i style="width:' + (c.share * 100).toFixed(1) + '%;background:' + shades[i] + '"></i>'; }).join('');
+      var legend = r.byCategory.map(function (c) { return '<span>' + c.label + ' <b>' + f.pct(c.share) + '</b></span>'; }).join('');
+      var rows = r.byActivity.map(function (a) {
+        return '<tr><td>' + a.title + '</td><td>' + a.categoryLabel + '</td><td class="r">' + a.youth + '명</td><td class="r">' + f.num(a.hours) + '</td><td class="r"><b>' + f.won(a.value) + '</b></td></tr>';
+      }).join('');
+      var road = r.plan.map(function (p) { return '<div><b>' + p[0] + '</b><span>' + p[1] + '</span></div>'; }).join('');
+
+      var p3 =
+        '<section class="page p3">'
+        + '<aside class="side"><small class="en">SOCIAL VALUE</small><h2>사회적 가치<br/>성과</h2>'
+        + '<p class="lead">' + r.profile.intro.split('. ')[0] + '.</p>'
+        + '<dl><div><dt>산정식</dt><dd>활동 시간 × 표준 단가 × 기관 가중치</dd></div>'
+        + '<div><dt>표준 단가</dt><dd>' + f.won(G.rates.base) + '원 · 돌봄·보육 ' + f.won(G.rates.care) + '원</dd></div>'
+        + '<div><dt>가중치</dt><dd>1.0~1.5 · 직무 난이도만 적용</dd></div>'
+        + '<div><dt>집계 대상</dt><dd>기관 승인(APPROVED) 기록만</dd></div></dl></aside>'
+        + '<div class="top"><span class="en">' + r.org.name + ' ESG MANAGEMENT REPORT ' + r.year + '</span><b class="en">03</b></div>'
+        + '<div class="box" style="left:320px;top:72px;width:370px;height:430px"><h3>월별 사회적 가치<span>' + r.period + '</span></h3>' + bars + '</div>'
+        + '<div class="box" style="left:706px;top:72px;right:48px;height:176px"><h3>분야별 사회적 가치 비중</h3><div class="stack">' + stack + '</div><div class="legend">' + legend + '</div></div>'
+        + '<div class="box road" style="left:706px;top:262px;right:48px;height:240px"><h3>내년 계획</h3>' + road + '</div>'
+        + '<div class="box" style="left:320px;top:516px;right:48px;height:238px"><h3>활동별 성과<span>사회적 가치 순</span></h3>'
+        + '<table class="acts"><thead><tr><th>활동</th><th>분야</th><th class="r">참여 청년</th><th class="r">시간</th><th class="r">사회적 가치(원)</th></tr></thead><tbody>' + rows + '</tbody></table></div>'
+        + '<p class="note">* 확인번호 ' + r.confirmNo + ' · GreenStep 확인번호 조회(/verify)에서 진위 확인 · 집계 기준 ' + r.generatedAt + '</p>'
+        + '<span class="sample">디자인 목업 · 예시 데이터</span>'
+        + '</section>';
+
+      document.getElementById('app').innerHTML = cover + p2 + p3;
+    })();
+  </script>
+</body>
+</html>

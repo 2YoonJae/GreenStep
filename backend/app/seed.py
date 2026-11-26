@@ -12,6 +12,8 @@ from app.domain import REGION_CODE, judge_difficulty
 from app.security import hash_password
 
 DEMO_PASSWORD = "demo1234"
+# 기관 회원가입 시연용 기관 코드 키 (웹 mock 의 seedOrgKeys 와 같은 값). 실제 키는 운영자가 organization_keys 에 직접 발급
+DEMO_ORG_KEYS = ("GS-DEMO-0001", "GS-DEMO-0002", "GS-DEMO-0003")
 
 
 def _activity(org: m.Organization, **kw) -> m.Activity:
@@ -22,10 +24,21 @@ def _activity(org: m.Organization, **kw) -> m.Activity:
     return a
 
 
+def _seed_org_keys(db) -> None:
+    """데모용 기관 코드 키 (없는 것만 추가). 이미 데이터가 있는 DB 에도 적용"""
+    have = set(db.scalars(select(m.OrganizationKey.key_code).where(m.OrganizationKey.key_code.in_(DEMO_ORG_KEYS))))
+    new = [m.OrganizationKey(key_code=k) for k in DEMO_ORG_KEYS if k not in have]
+    if new:
+        db.add_all(new)
+        db.commit()
+        print(f"[seed] 데모 기관 코드 키 {len(new)}개를 추가했습니다.")
+
+
 def run() -> None:
     if not settings.demo_mode:
         return
     with SessionLocal() as db:
+        _seed_org_keys(db)
         if db.scalar(select(func.count()).select_from(m.User)):
             return
         pw = hash_password(DEMO_PASSWORD)

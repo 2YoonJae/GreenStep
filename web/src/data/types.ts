@@ -62,6 +62,14 @@ export interface Organization {
   vulnerable: boolean;
 }
 
+/** organization_keys — GreenStep 이 발급한 기관 코드 키. 미사용 키만 기관 가입에 쓸 수 있음 */
+export interface OrgKey {
+  keyCode: string; // key_code
+  organizationId: ID | null; // 사용한 기관
+  issuedAt: ISODateTime;
+  usedAt: ISODateTime | null;
+}
+
 /** org_members.role — 기관 관리자 / 담당자 */
 export type OrgMemberRole = 'OWNER' | 'MANAGER';
 /** org_members.membership_status — 승인 대기 / 활성 / 해제 */

@@ -179,12 +179,7 @@ class OrganizationIn(Camel):
     address: str = Field(min_length=1, max_length=255)
     contact_email: str = Field(pattern=EMAIL, max_length=255)
     business_no: str = Field(max_length=12)
-
-
-class OrganizationProfileIn(Camel):
-    """organization_profiles (가중치 플래그는 운영자 전용이라 받지 않음)"""
-
-    intro: str = ""
+    business_api_key: str = Field(min_length=1, max_length=20)  # GreenStep 이 발급한 기관 코드 키
 
 
 class ManagerIn(Camel):
@@ -196,8 +191,9 @@ class ManagerIn(Camel):
 
 
 class OrgSignupIn(Camel):
+    """기관 소개(organization_profiles.intro)는 가입 때 받지 않음 — 빈 값으로 생성"""
+
     organization: OrganizationIn
-    profile: OrganizationProfileIn = OrganizationProfileIn()
     manager: ManagerIn
 
 

@@ -19,6 +19,7 @@ import {
   type User,
 } from '../../data/types';
 import { db, getSession, nextId, save, setSession, sha256, type MockDb } from './db';
+import { seedOrgKeys } from '../../data/seed';
 import { judgeDifficulty } from '../../lib/difficulty';
 import { hoursBetween, rateOf, socialValue } from '../../lib/sroi';
 import { approvalRate, buildSnapshot, sumHours, sumValue, uniqueYouth } from '../../lib/aggregate';
@@ -29,7 +30,8 @@ const now = () => new Date().toISOString();
 const fail = (status: number, msg: string): never => {
   throw new ApiError(status, msg);
 };
-const token = () => Math.random().toString(36).slice(2) + Date.now().toString(36);
+const clone = <T,>(v: T): T => JSON.parse(JSON.stringify(v));
+const token = () =>Math.random().toString(36).slice(2) + Date.now().toString(36);
 const ALNUM = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 const rand4 = () => Array.from({ length: 4 }, () => ALNUM[Math.floor(Math.random() * ALNUM.length)]).join('');
 
@@ -203,18 +205,25 @@ export const mockApi: Api = {
     async signupOrg(input) {
       await wait();
       const d = await db();
-      const { organization: o, profile, manager } = input;
+      const { organization: o, manager } = input;
       checkPassword(manager.password);
       const email = manager.email.trim().toLowerCase();
       const biz = o.businessNo.replace(/\D/g, '');
       if (biz.length !== 10) fail(400, '사업자등록번호 10자리를 입력해 주세요.');
+      // 서버와 같은 검사: 발급됐고 아직 쓰이지 않은 기관 코드 키만 통과
+      const keyCode = o.businessApiKey.trim().toUpperCase();
+      d.org_keys ??= clone(seedOrgKeys); // 이 기능 이전에 저장된 데모 DB 보정
+      const key = d.org_keys.find((k) => k.keyCode === keyCode);
+      if (!key || key.organizationId) fail(400, '유효하지 않거나 이미 사용된 기관 코드 키입니다. GreenStep에서 발급받은 키를 확인해 주세요.');
       if (d.organizations.some((x) => x.businessNo === biz)) fail(409, '이미 등록된 사업자등록번호입니다.');
       if (emailTaken(d, email)) fail(409, '이미 가입된 담당자 이메일입니다.');
       const org: Organization = {
         id: nextId(d, 'o'), name: o.name.trim(), organizationType: o.organizationType, verificationStatus: 'PENDING', address: o.address.trim(),
         contactEmail: o.contactEmail.trim().toLowerCase(), createdAt: now(), businessNo: biz,
-        intro: profile.intro.trim(), shortage: false, difficulty: false, vulnerable: false,
+        intro: '', shortage: false, difficulty: false, vulnerable: false,
       };
+      key!.organizationId = org.id;
+      key!.usedAt = now();
       const member = {
         id: nextId(d, 'm'), userId: nextId(d, 'mu'), organizationId: org.id, role: 'OWNER' as const, membershipStatus: 'ACTIVE' as const,
         joinedAt: now(), email, name: manager.name.trim(),
